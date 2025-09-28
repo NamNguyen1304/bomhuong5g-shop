@@ -133,9 +133,10 @@ Có thể dễ dàng mở rộng với:
 
 ## 📞 Liên hệ
 
-- **Hotline**: 1900-5555
-- **Email**: info@bomhuong5g.vn
-- **Địa chỉ**: 123 Nguyễn Văn Cừ, Q1, TP.HCM
+- **Hotline/Zalo**: 0358602326
+- **Shopee**: [shopee.vn/doanhan3004](https://shopee.vn/doanhan3004)
+- **Địa chỉ**: 40/43 Nguyễn Gián Thanh, Phường 15, Quận 10, TP.HCM
+- **Bản đồ**: Tích hợp Google Maps với định vị chính xác
 
 ---
 

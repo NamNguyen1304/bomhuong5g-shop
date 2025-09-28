@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WIFI 5G Shop Bom Huong - Samsung SCR01 5G Mobile Router</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header & Navigation */
+        .navbar {
+            background: #2c3e50;
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand h1 {
+            color: #3498db;
+            font-size: 1.8rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            color: #ecf0f1;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: #3498db;
+        }
+
+        .cart-btn {
+            background: #e74c3c;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 150px 0 100px;
+            margin-top: 80px;
+        }
+
+        .hero h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            font-weight: bold;
+            transition: background 0.3s;
+            margin: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+
+        .btn-shopee {
+            background: #f53d2d;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            font-weight: bold;
+            transition: background 0.3s;
+            margin: 0.5rem;
+        }
+
+        .btn-shopee:hover {
+            background: #d32f2f;
+        }
+
+        /* Products Section */
+        .products {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+
+        .products h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #2c3e50;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            background: #ecf0f1;
+        }
+
+        .product-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+
+        .price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 1rem;
+        }
+
+        .features {
+            list-style: none;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .features li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #ecf0f1;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .features li:before {
+            content: "✓";
+            color: #27ae60;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .product-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-add-cart, .btn-shopee-product {
+            flex: 1;
+            min-width: 120px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: bold;
+            transition: background 0.3s;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-shopee-product {
+            background: #f53d2d;
+        }
+
+        .btn-add-cart:hover {
+            background: #219a52;
+        }
+
+        .btn-shopee-product:hover {
+            background: #d32f2f;
+        }
+
+        /* About Section */
+        .about {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .about h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #2c3e50;
+        }
+
+        .about p {
+            text-align: center;
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+            color: #7f8c8d;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .feature h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #3498db;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 80px 0;
+            background: #2c3e50;
+            color: white;
+        }
+
+        .contact h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .contact-info h3 {
+            color: #3498db;
+            margin-bottom: 1rem;
+        }
+
+        .contact-info a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .contact-info a:hover {
+            opacity: 0.8;
+        }
+
+        .map-container {
+            margin-top: 3rem;
+        }
+
+        .map-container h3 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .map-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .map-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .map-link {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .map-link a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* Footer */
+        footer {
+            background: #34495e;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar .container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-menu {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .hero {
+                padding: 120px 0 80px;
+            }
+
+            .hero h2 {
+                font-size: 2rem;
+            }
+
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-buttons {
+                flex-direction: column;
+            }
+
+            .btn-add-cart, .btn-shopee-product {
+                flex: none;
+            }
+        }
+
+        .real-shop-banner {
+            background: linear-gradient(45deg, #f53d2d, #ff6b35);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .real-shop-banner a {
+            color: white;
+            text-decoration: none;
+            border-bottom: 2px solid white;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+    <div class="real-shop-banner">
+        🛒 Shop thật trên Shopee: <a href="https://shopee.vn/doanhan3004" target="_blank">shopee.vn/doanhan3004</a> - Hotline/Zalo: 0358602326 🛒
+    </div>
+
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-brand">
+                    <h1>WIFI 5G Shop Bom Huong</h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#home">Trang chủ</a></li>
+                    <li><a href="#products">Sản phẩm</a></li>
+                    <li><a href="#about">Giới thiệu</a></li>
+                    <li><a href="#contact">Liên hệ</a></li>
+                    <li><a href="https://shopee.vn/doanhan3004" target="_blank" class="btn-shopee">Shop Shopee</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="container">
+                <h2>Samsung Galaxy 5G Mobile WiFi SCR01</h2>
+                <p>Trải nghiệm internet tốc độ cao với công nghệ 5G tiên tiến</p>
+                <p style="margin-bottom: 2rem; font-size: 1.1rem;">🏪 Shop thật tại: 40/43 Nguyễn Gián Thanh, P15, Q10, TP.HCM</p>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="#products" class="btn-primary">Xem sản phẩm</a>
+                    <a href="https://shopee.vn/doanhan3004" target="_blank" class="btn-shopee">Mua trên Shopee</a>
+                    <a href="https://zalo.me/0358602326" target="_blank" class="btn-primary" style="background: #0084ff;">Chat Zalo</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="products" class="products">
+            <div class="container">
+                <h2>Samsung SCR01 5G - Sản phẩm có sẵn</h2>
+                <div class="product-grid">
+                    <div class="product-card">
+                        <img src="https://www.4gltemall.com/media/catalog/product/cache/1/image/650x650/9df78eab33525d08d6e5fb8d27136e95/s/a/samsung_galaxy_5g_mobile_wifi_scr01_.png" alt="Samsung Galaxy 5G Mobile WiFi SCR01">
+                        <h3>Samsung Galaxy 5G Mobile WiFi SCR01</h3>
+                        <p class="price">Giá: Liên hệ Zalo</p>
+                        <ul class="features">
+                            <li>Tốc độ 5G lên đến 2.2Gbps</li>
+                            <li>Màn hình LCD 5.3 inch (1480x720)</li>
+                            <li>Pin 5000mAh - 16h sử dụng</li>
+                            <li>Kết nối tối đa 10 thiết bị</li>
+                            <li>Chipset MediaTek Dimensity 720</li>
+                            <li>Hỗ trợ Android 11 + OneUI 3.0</li>
+                            <li>Bảo hành chính hãng</li>
+                        </ul>
+                        <div class="product-buttons">
+                            <a href="https://shopee.vn/doanhan3004" target="_blank" class="btn-shopee-product">Mua Shopee</a>
+                            <a href="https://zalo.me/0358602326" target="_blank" class="btn-add-cart" style="background: #0084ff;">Chat Zalo</a>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="https://www.4gltemall.com/media/catalog/product/cache/1/image/650x650/9df78eab33525d08d6e5fb8d27136e95/s/a/samsung_galaxy_5g_mobile_wifi_scr01_.png" alt="Samsung SCR01 5G Package">
+                        <h3>Samsung SCR01 5G + Phụ kiện</h3>
+                        <p class="price">Combo: Liên hệ Zalo</p>
+                        <ul class="features">
+                            <li>Samsung SCR01 5G Router</li>
+                            <li>Pin dự phòng chất lượng cao</li>
+                            <li>Ốp lưng bảo vệ</li>
+                            <li>Cáp USB-C chính hãng</li>
+                            <li>Adapter sạc nhanh</li>
+                            <li>Hướng dẫn sử dụng</li>
+                            <li>Bảo hành mở rộng</li>
+                        </ul>
+                        <div class="product-buttons">
+                            <a href="https://shopee.vn/doanhan3004" target="_blank" class="btn-shopee-product">Mua Shopee</a>
+                            <a href="https://zalo.me/0358602326" target="_blank" class="btn-add-cart" style="background: #0084ff;">Chat Zalo</a>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="https://www.4gltemall.com/media/catalog/product/cache/1/image/650x650/9df78eab33525d08d6e5fb8d27136e95/s/a/samsung_galaxy_5g_mobile_wifi_scr01_.png" alt="Samsung SCR01 5G Business">
+                        <h3>Samsung SCR01 5G Business</h3>
+                        <p class="price">Gói doanh nghiệp: Liên hệ</p>
+                        <ul class="features">
+                            <li>Samsung SCR01 5G chính hãng</li>
+                            <li>Tư vấn sim 5G phù hợp</li>
+                            <li>Setup và cài đặt miễn phí</li>
+                            <li>Hỗ trợ kỹ thuật 24/7</li>
+                            <li>Bảo hành ưu tiên</li>
+                            <li>Giao hàng tận nơi</li>
+                            <li>Hóa đơn VAT đầy đủ</li>
+                        </ul>
+                        <div class="product-buttons">
+                            <a href="https://shopee.vn/doanhan3004" target="_blank" class="btn-shopee-product">Mua Shopee</a>
+                            <a href="https://zalo.me/0358602326" target="_blank" class="btn-add-cart" style="background: #0084ff;">Chat Zalo</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="about">
+            <div class="container">
+                <h2>Về WIFI 5G Shop Bom Huong</h2>
+                <p>Chúng tôi là shop chuyên cung cấp Samsung Galaxy 5G Mobile WiFi SCR01 chính hãng tại TP.HCM. Với kinh nghiệm nhiều năm trong lĩnh vực thiết bị mạng, chúng tôi cam kết mang đến sản phẩm chất lượng và dịch vụ tốt nhất.</p>
+                <div class="features-grid">
+                    <div class="feature">
+                        <h3>🏪 Shop thật tại HCM</h3>
+                        <p>Địa chỉ cố định tại 40/43 Nguyễn Gián Thanh, Phường 15, Quận 10</p>
+                    </div>
+                    <div class="feature">
+                        <h3>✅ Sản phẩm chính hãng</h3>
+                        <p>100% Samsung SCR01 5G chính hãng, còn nguyên seal, bảo hành đầy đủ</p>
+                    </div>
+                    <div class="feature">
+                        <h3>🚚 Giao hàng nhanh</h3>
+                        <p>Giao hàng trong ngày tại TP.HCM, ship toàn quốc qua bưu điện</p>
+                    </div>
+                    <div class="feature">
+                        <h3>💬 Hỗ trợ tận tâm</h3>
+                        <p>Zalo/Hotline: 0358602326 - Tư vấn và hỗ trợ kỹ thuật 24/7</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact">
+            <div class="container">
+                <h2>Liên hệ đặt hàng</h2>
+                <div class="contact-info">
+                    <div>
+                        <h3>📞 Hotline / Zalo</h3>
+                        <p><a href="tel:0358602326">0358602326</a></p>
+                        <p><a href="https://zalo.me/0358602326" target="_blank">Chat Zalo ngay</a></p>
+                    </div>
+                    <div>
+                        <h3>🛒 Shopee Official</h3>
+                        <p><a href="https://shopee.vn/doanhan3004" target="_blank">shopee.vn/doanhan3004</a></p>
+                        <p>Shop uy tín với nhiều đánh giá tích cực</p>
+                    </div>
+                    <div>
+                        <h3>🏪 Địa chỉ cửa hàng</h3>
+                        <p>40/43 Nguyễn Gián Thanh</p>
+                        <p>Phường 15, Quận 10, TP.HCM</p>
+                    </div>
+                </div>
+
+                <div class="map-container">
+                    <h3>📍 Bản đồ cửa hàng</h3>
+                    <div class="map-wrapper">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.6326888950537!2d106.66634401538308!3d10.762622092334013!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752ee429c3c081%3A0x6de2321972e5e29b!2zNDAvNDMgTmd1eeG7hW4gR2nDom4gVGhhbmgsIFBoxrDhu51uZyAxNSwgUXXhuq1uIDEwLCBUaMOgbmggcGjhu5EgSOG7kyBDaMOtIE1pbmgsIFZp4buHdCBOYW0!5e0!3m2!1svi!2s!4v1640995200000!5m2!1svi!2s"
+                            allowfullscreen=""
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                    <div class="map-link">
+                        <a href="https://maps.google.com/?q=40/43+Nguyễn+Gián+Thanh,+Phường+15,+Quận+10,+TP.HCM" target="_blank">
+                            📍 Mở trong Google Maps
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 WIFI 5G Shop Bom Huong - Chuyên Samsung SCR01 5G Router</p>
+            <p>Địa chỉ: 40/43 Nguyễn Gián Thanh, P15, Q10, TP.HCM | Hotline: 0358602326</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Mobile menu toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add any additional JavaScript functionality here
+            console.log('WIFI 5G Shop Bom Huong - Website loaded successfully!');
+        });
+    </script>
+</body>
+</html>
