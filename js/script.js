@@ -1,3 +1,36 @@
+// Mobile menu functionality
+function toggleMobileMenu() {
+    const navMenu = document.getElementById('nav-menu');
+    const menuIcon = document.getElementById('menu-icon');
+
+    if (navMenu.classList.contains('mobile-hidden')) {
+        navMenu.classList.remove('mobile-hidden');
+        menuIcon.textContent = '✕';
+    } else {
+        navMenu.classList.add('mobile-hidden');
+        menuIcon.textContent = '☰';
+    }
+}
+
+function closeMobileMenu() {
+    const navMenu = document.getElementById('nav-menu');
+    const menuIcon = document.getElementById('menu-icon');
+
+    navMenu.classList.add('mobile-hidden');
+    menuIcon.textContent = '☰';
+}
+
+// Close mobile menu when clicking outside
+document.addEventListener('click', function(event) {
+    const navMenu = document.getElementById('nav-menu');
+    const menuToggle = document.querySelector('.mobile-menu-toggle');
+    const navbar = document.querySelector('.navbar');
+
+    if (!navbar.contains(event.target) && !navMenu.classList.contains('mobile-hidden')) {
+        closeMobileMenu();
+    }
+});
+
 // Product data
 const products = {
     1: {

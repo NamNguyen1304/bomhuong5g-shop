@@ -15,12 +15,15 @@
                 <div class="nav-brand">
                     <h1>vOz Shop</h1>
                 </div>
-                <ul class="nav-menu">
-                    <li><a href="#home">Trang chủ</a></li>
-                    <li><a href="#products">Sản phẩm</a></li>
-                    <li><a href="#about">Giới thiệu</a></li>
-                    <li><a href="#contact">Liên hệ</a></li>
-                    <li><a href="#cart" class="cart-btn">Giỏ hàng (<span id="cart-count">0</span>)</a></li>
+                <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+                    <span id="menu-icon">☰</span>
+                </button>
+                <ul class="nav-menu mobile-hidden" id="nav-menu">
+                    <li><a href="#home" onclick="closeMobileMenu()">Trang chủ</a></li>
+                    <li><a href="#products" onclick="closeMobileMenu()">Sản phẩm</a></li>
+                    <li><a href="#about" onclick="closeMobileMenu()">Giới thiệu</a></li>
+                    <li><a href="#contact" onclick="closeMobileMenu()">Liên hệ</a></li>
+                    <li><a href="#cart" class="cart-btn" onclick="closeMobileMenu()">Giỏ hàng (<span id="cart-count">0</span>)</a></li>
                 </ul>
             </div>
         </nav>
