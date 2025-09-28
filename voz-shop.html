@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vOz Shop - Thiết bị mạng 5G, Router WiFi chính hãng</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header & Navigation */
+        .navbar {
+            background: #2c3e50;
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand h1 {
+            color: #3498db;
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .nav-brand .shop-tagline {
+            color: #ecf0f1;
+            font-size: 0.9rem;
+            margin-top: 0.2rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            color: #ecf0f1;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: #3498db;
+        }
+
+        .btn-shopee-nav {
+            background: #f53d2d;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            color: white !important;
+            font-weight: bold;
+        }
+
+        .btn-shopee-nav:hover {
+            background: #d32f2f;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 150px 0 100px;
+            margin-top: 80px;
+        }
+
+        .hero h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            font-weight: bold;
+            transition: background 0.3s;
+            margin: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+
+        .btn-shopee {
+            background: #f53d2d;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            font-weight: bold;
+            transition: background 0.3s;
+            margin: 0.5rem;
+        }
+
+        .btn-shopee:hover {
+            background: #d32f2f;
+        }
+
+        .btn-zalo {
+            background: #0084ff;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            font-weight: bold;
+            transition: background 0.3s;
+            margin: 0.5rem;
+        }
+
+        /* Products Section */
+        .products {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+
+        .products h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+
+        .products .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #e74c3c;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            background: #ecf0f1;
+        }
+
+        .product-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+            height: 3.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 1rem;
+        }
+
+        .old-price {
+            text-decoration: line-through;
+            color: #95a5a6;
+            font-size: 1.1rem;
+            margin-right: 0.5rem;
+        }
+
+        .features {
+            list-style: none;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .features li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #ecf0f1;
+            position: relative;
+            padding-left: 20px;
+            font-size: 0.95rem;
+        }
+
+        .features li:before {
+            content: "✓";
+            color: #27ae60;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .product-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-product {
+            flex: 1;
+            min-width: 120px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: bold;
+            transition: background 0.3s;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-shopee-product {
+            background: #f53d2d;
+        }
+
+        .btn-shopee-product:hover {
+            background: #d32f2f;
+        }
+
+        .btn-zalo-product {
+            background: #0084ff;
+        }
+
+        .btn-zalo-product:hover {
+            background: #0066cc;
+        }
+
+        /* About Section */
+        .about {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .about h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #2c3e50;
+        }
+
+        .about p {
+            text-align: center;
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+            color: #7f8c8d;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            transition: transform 0.3s;
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #3498db;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 80px 0;
+            background: #2c3e50;
+            color: white;
+        }
+
+        .contact h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .contact-info h3 {
+            color: #3498db;
+            margin-bottom: 1rem;
+        }
+
+        .contact-info a {
+            color: inherit;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .contact-info a:hover {
+            opacity: 0.8;
+        }
+
+        .map-container {
+            margin-top: 3rem;
+        }
+
+        .map-container h3 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .map-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .map-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .map-link {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .map-link a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* Footer */
+        footer {
+            background: #34495e;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .nav-menu.mobile-hidden {
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar .container {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: #2c3e50;
+                flex-direction: column;
+                padding: 1rem;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                z-index: 999;
+            }
+
+            .nav-menu.mobile-show {
+                display: flex;
+            }
+
+            .nav-menu li {
+                margin: 0.5rem 0;
+                text-align: center;
+            }
+
+            .nav-menu a {
+                display: block;
+                padding: 0.75rem;
+                border-radius: 5px;
+                transition: background 0.3s;
+            }
+
+            .nav-menu a:hover {
+                background: rgba(52, 152, 219, 0.2);
+            }
+
+            .hero {
+                padding: 140px 0 80px;
+                margin-top: 60px;
+            }
+
+            .hero h2 {
+                font-size: 2rem;
+            }
+
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-buttons {
+                flex-direction: column;
+            }
+
+            .contact-info {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .shopee-banner {
+            background: linear-gradient(45deg, #f53d2d, #ff6b35);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .shopee-banner a {
+            color: white;
+            text-decoration: none;
+            border-bottom: 2px solid white;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+    <div class="shopee-banner">
+        🛒 vOz Shop chính thức trên Shopee: <a href="https://shopee.vn/doanhan3004" target="_blank">shopee.vn/doanhan3004</a> - Hotline/Zalo: 0358602326 🛒
+    </div>
+
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-brand">
+                    <h1>vOz Shop</h1>
+                    <div class="shop-tagline">Thiết bị mạng 5G chính hãng</div>
+                </div>
+                <button class="mobile-menu-toggle" id="mobile-menu-toggle">☰</button>
+                <ul class="nav-menu" id="nav-menu">
+                    <li><a href="#home">Trang chủ</a></li>
+                    <li><a href="#products">Sản phẩm</a></li>
+                    <li><a href="#about">Giới thiệu</a></li>
+                    <li><a href="#contact">Liên hệ</a></li>
+                    <li><a href="https://shopee.vn/doanhan3004" target="_blank" class="btn-shopee-nav">🛒 Shopee Mall</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="container">
+                <h2>vOz Shop - Chuyên Router WiFi 5G</h2>
+                <p>Thiết bị mạng chính hãng, giá tốt nhất thị trường</p>
+                <p style="margin-bottom: 2rem; font-size: 1.1rem;">🏪 Cửa hàng: 40/43 Nguyễn Gián Thanh, P15, Q10, TP.HCM</p>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="#products" class="btn-primary">Xem sản phẩm</a>
+                    <a href="https://shopee.vn/doanhan3004" target="_blank" class="btn-shopee">🛒 Mua trên Shopee</a>
+                    <a href="https://zalo.me/0358602326" target="_blank" class="btn-zalo">💬 Chat Zalo</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="products" class="products">
+            <div class="container">
+                <h2>Sản phẩm hot tại vOz Shop</h2>
+                <p class="subtitle">Tất cả sản phẩm có sẵn tại shop, giao hàng ngay trong ngày</p>
+
+                <div class="product-grid">
+                    <!-- Samsung Galaxy 5G Mobile WiFi SCR01 -->
+                    <div class="product-card">
+                        <div class="product-badge">HOT</div>
+                        <img src="https://www.4gltemall.com/media/catalog/product/cache/1/image/650x650/9df78eab33525d08d6e5fb8d27136e95/s/a/samsung_galaxy_5g_mobile_wifi_scr01_.png" alt="Samsung Galaxy 5G Mobile WiFi SCR01">
+                        <h3>Samsung Galaxy 5G Mobile WiFi SCR01</h3>
+                        <p class="price">
+                            <span class="old-price">5.990.000đ</span>
+                            4.990.000đ
+                        </p>
+                        <ul class="features">
+                            <li>Tốc độ 5G lên đến 2.2Gbps</li>
+                            <li>Màn hình LCD 5.3 inch cảm ứng</li>
+                            <li>Pin 5000mAh, sử dụng 16h liên tục</li>
+                            <li>Kết nối 10 thiết bị đồng thời</li>
+                            <li>Chipset MediaTek Dimensity 720</li>
+                            <li>Hỗ trợ 4G/5G tất cả nhà mạng VN</li>
+                            <li>Bảo hành 12 tháng chính hãng</li>
+                        </ul>
+                        <div class="product-buttons">
+                            <a href="https://shopee.vn/doanhan3004" target="_blank" class="btn-product btn-shopee-product">🛒 Mua Shopee</a>
+                            <a href="https://zalo.me/0358602326" target="_blank" class="btn-product btn-zalo-product">💬 Chat Zalo</a>
+                        </div>
+                    </div>
+
+                    <!-- Bộ phát WiFi 4G/5G Portable -->
+                    <div class="product-card">
+                        <div class="product-badge">BÁN CHẠY</div>
+                        <img src="https://images.unsplash.com/photo-1606904825846-647eb07f5be2?w=400&h=300&fit=crop" alt="Bộ phát WiFi 4G/5G Portable">
+                        <h3>Bộ phát WiFi 4G/5G Portable Mini</h3>
+                        <p class="price">
+                            <span class="old-price">1.990.000đ</span>
+                            1.590.000đ
+                        </p>
+                        <ul class="features">
+                            <li>Hỗ trợ 4G/5G tốc độ cao</li>
+                            <li>Pin 4000mAh, sử dụng 12h</li>
+                            <li>Kết nối 8 thiết bị</li>
+                            <li>Màn hình OLED hiển thị thông tin</li>
+                            <li>Hỗ trợ thẻ MicroSD lên 128GB</li>
+                            <li>Thiết kế nhỏ gọn, dễ mang theo</li>
+                            <li>Bảo hành 12 tháng</li>
+                        </ul>
+                        <div class="product-buttons">
+                            <a href="https://shopee.vn/doanhan3004" target="_blank" class="btn-product btn-shopee-product">🛒 Mua Shopee</a>
+                            <a href="https://zalo.me/0358602326" target="_blank" class="btn-product btn-zalo-product">💬 Chat Zalo</a>
+                        </div>
+                    </div>
+
+                    <!-- Router WiFi 6 Mesh -->
+                    <div class="product-card">
+                        <div class="product-badge">MỚI</div>
+                        <img src="https://images.unsplash.com/photo-1544790830-0c2e0a7ad69e?w=400&h=300&fit=crop" alt="Router WiFi 6 Mesh">
+                        <h3>Router WiFi 6 AX1800 Mesh</h3>
+                        <p class="price">
+                            <span class="old-price">2.990.000đ</span>
+                            2.490.000đ
+                        </p>
+                        <ul class="features">
+                            <li>WiFi 6 AX1800 tốc độ 1.8Gbps</li>
+                            <li>Công nghệ Mesh phủ sóng toàn nhà</li>
+                            <li>4 anten tăng ích cao</li>
+                            <li>Hỗ trợ 50+ thiết bị đồng thời</li>
+                            <li>QoS thông minh ưu tiên game</li>
+                            <li>Bảo mật WPA3 mới nhất</li>
+                            <li>App quản lý dễ dàng</li>
+                        </ul>
+                        <div class="product-buttons">
+                            <a href="https://shopee.vn/doanhan3004" target="_blank" class="btn-product btn-shopee-product">🛒 Mua Shopee</a>
+                            <a href="https://zalo.me/0358602326" target="_blank" class="btn-product btn-zalo-product">💬 Chat Zalo</a>
+                        </div>
+                    </div>
+
+                    <!-- USB WiFi 5G Dongle -->
+                    <div class="product-card">
+                        <div class="product-badge">GIÁ SỐC</div>
+                        <img src="https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?w=400&h=300&fit=crop" alt="USB WiFi 5G Dongle">
+                        <h3>USB WiFi 5G Dongle AC1200</h3>
+                        <p class="price">
+                            <span class="old-price">899.000đ</span>
+                            590.000đ
+                        </p>
+                        <ul class="features">
+                            <li>Chuẩn WiFi AC1200 dual band</li>
+                            <li>Tốc độ 300Mbps (2.4GHz) + 867Mbps (5GHz)</li>
+                            <li>Anten tăng ích 2dBi</li>
+                            <li>Hỗ trợ Windows/Mac/Linux</li>
+                            <li>Kích thước mini, cắm là dùng</li>
+                            <li>Tiết kiệm pin laptop</li>
+                            <li>Bảo hành 6 tháng</li>
+                        </ul>
+                        <div class="product-buttons">
+                            <a href="https://shopee.vn/doanhan3004" target="_blank" class="btn-product btn-shopee-product">🛒 Mua Shopee</a>
+                            <a href="https://zalo.me/0358602326" target="_blank" class="btn-product btn-zalo-product">💬 Chat Zalo</a>
+                        </div>
+                    </div>
+
+                    <!-- Repeater WiFi 5G -->
+                    <div class="product-card">
+                        <div class="product-badge">DEAL</div>
+                        <img src="https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&h=300&fit=crop" alt="Repeater WiFi 5G">
+                        <h3>Repeater WiFi 5G AC750</h3>
+                        <p class="price">
+                            <span class="old-price">690.000đ</span>
+                            490.000đ
+                        </p>
+                        <ul class="features">
+                            <li>Mở rộng vùng phủ sóng WiFi</li>
+                            <li>Dual band AC750 (300+433Mbps)</li>
+                            <li>2 anten ngoài tăng ích</li>
+                            <li>Cài đặt đơn giản qua app</li>
+                            <li>LED báo hiệu cường độ tín hiệu</li>
+                            <li>Tiết kiệm điện năng</li>
+                            <li>Tương thích mọi router</li>
+                        </ul>
+                        <div class="product-buttons">
+                            <a href="https://shopee.vn/doanhan3004" target="_blank" class="btn-product btn-shopee-product">🛒 Mua Shopee</a>
+                            <a href="https://zalo.me/0358602326" target="_blank" class="btn-product btn-zalo-product">💬 Chat Zalo</a>
+                        </div>
+                    </div>
+
+                    <!-- Sim 5G Data Khủng -->
+                    <div class="product-card">
+                        <div class="product-badge">SIÊU HOT</div>
+                        <img src="https://images.unsplash.com/photo-1556656793-08538906a9f8?w=400&h=300&fit=crop" alt="Sim 5G Data">
+                        <h3>Sim 5G Data Khủng Unlimited</h3>
+                        <p class="price">
+                            <span class="old-price">500.000đ/tháng</span>
+                            290.000đ/tháng
+                        </p>
+                        <ul class="features">
+                            <li>Data 5G không giới hạn</li>
+                            <li>Tốc độ 5G thực tế 100-500Mbps</li>
+                            <li>Phủ sóng toàn quốc</li>
+                            <li>Không FUP, không cắt tốc độ</li>
+                            <li>Miễn phí cuộc gọi nội mạng</li>
+                            <li>Hỗ trợ eSim cho iPhone</li>
+                            <li>Đăng ký nhanh online</li>
+                        </ul>
+                        <div class="product-buttons">
+                            <a href="https://shopee.vn/doanhan3004" target="_blank" class="btn-product btn-shopee-product">🛒 Mua Shopee</a>
+                            <a href="https://zalo.me/0358602326" target="_blank" class="btn-product btn-zalo-product">💬 Chat Zalo</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="about">
+            <div class="container">
+                <h2>Về vOz Shop</h2>
+                <p>vOz Shop là cửa hàng chuyên cung cấp thiết bị mạng 5G, router WiFi chính hãng tại TP.HCM. Với kinh nghiệm nhiều năm trong lĩnh vực công nghệ, chúng tôi cam kết mang đến sản phẩm chất lượng cao và dịch vụ tốt nhất cho khách hàng.</p>
+                <div class="features-grid">
+                    <div class="feature">
+                        <h3>🏪 Shop thật tại HCM</h3>
+                        <p>Địa chỉ cố định tại 40/43 Nguyễn Gián Thanh, Phường 15, Quận 10</p>
+                    </div>
+                    <div class="feature">
+                        <h3>✅ Hàng chính hãng 100%</h3>
+                        <p>Tất cả sản phẩm đều chính hãng, còn nguyên seal, bảo hành đầy đủ</p>
+                    </div>
+                    <div class="feature">
+                        <h3>🚚 Giao hàng siêu tốc</h3>
+                        <p>Giao hàng trong 2h tại TP.HCM, 1-2 ngày toàn quốc</p>
+                    </div>
+                    <div class="feature">
+                        <h3>💬 Hỗ trợ 24/7</h3>
+                        <p>Zalo/Hotline: 0358602326 - Tư vấn và hỗ trợ kỹ thuật mọi lúc</p>
+                    </div>
+                    <div class="feature">
+                        <h3>🛒 Shopee Mall chính thức</h3>
+                        <p>Shop uy tín trên Shopee với hàng nghìn đánh giá 5 sao</p>
+                    </div>
+                    <div class="feature">
+                        <h3>💰 Giá tốt nhất thị trường</h3>
+                        <p>Cam kết giá tốt nhất, hoàn tiền nếu có nơi bán rẻ hơn</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact">
+            <div class="container">
+                <h2>Liên hệ vOz Shop</h2>
+                <div class="contact-info">
+                    <div>
+                        <h3>📞 Hotline / Zalo</h3>
+                        <p><a href="tel:0358602326">0358602326</a></p>
+                        <p><a href="https://zalo.me/0358602326" target="_blank">💬 Chat Zalo ngay</a></p>
+                        <p style="font-size: 0.9rem; opacity: 0.8;">Tư vấn miễn phí 24/7</p>
+                    </div>
+                    <div>
+                        <h3>🛒 Shopee Mall</h3>
+                        <p><a href="https://shopee.vn/doanhan3004" target="_blank">shopee.vn/doanhan3004</a></p>
+                        <p style="font-size: 0.9rem; opacity: 0.8;">Shop uy tín, giao hàng nhanh</p>
+                        <p style="font-size: 0.9rem; opacity: 0.8;">⭐ 4.9/5 sao (999+ đánh giá)</p>
+                    </div>
+                    <div>
+                        <h3>🏪 Địa chỉ cửa hàng</h3>
+                        <p>40/43 Nguyễn Gián Thanh</p>
+                        <p>Phường 15, Quận 10, TP.HCM</p>
+                        <p style="font-size: 0.9rem; opacity: 0.8;">Mở cửa: 8:00 - 22:00 hàng ngày</p>
+                    </div>
+                </div>
+
+                <div class="map-container">
+                    <h3>📍 Bản đồ cửa hàng vOz Shop</h3>
+                    <div class="map-wrapper">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.6326888950537!2d106.66634401538308!3d10.762622092334013!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752ee429c3c081%3A0x6de2321972e5e29b!2zNDAvNDMgTmd1eeG7hW4gR2nDom4gVGhhbmgsIFBoxrDhu51uZyAxNSwgUXXhuq1uIDEwLCBUaMOgbmggcGjhu5EgSOG7kyBDaMOtIE1pbmgsIFZp4buHdCBOYW0!5e0!3m2!1svi!2s!4v1640995200000!5m2!1svi!2s"
+                            allowfullscreen=""
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                    <div class="map-link">
+                        <a href="https://maps.google.com/?q=40/43+Nguyễn+Gián+Thanh,+Phường+15,+Quận+10,+TP.HCM" target="_blank">
+                            📍 Mở trong Google Maps để chỉ đường
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 vOz Shop - Chuyên thiết bị mạng 5G, Router WiFi chính hãng</p>
+            <p>🏪 Địa chỉ: 40/43 Nguyễn Gián Thanh, P15, Q10, TP.HCM | 📞 Hotline: 0358602326</p>
+            <p>🛒 Shopee Mall: <a href="https://shopee.vn/doanhan3004" target="_blank" style="color: #3498db;">shopee.vn/doanhan3004</a> | 💬 Zalo: <a href="https://zalo.me/0358602326" target="_blank" style="color: #0084ff;">Chat ngay</a></p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Mobile menu functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+            const navMenu = document.getElementById('nav-menu');
+
+            // Toggle mobile menu
+            mobileMenuToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                navMenu.classList.toggle('mobile-show');
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!navMenu.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                    navMenu.classList.remove('mobile-show');
+                }
+            });
+
+            // Close menu when clicking on menu links
+            navMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', function() {
+                    navMenu.classList.remove('mobile-show');
+                });
+            });
+
+            // Add floating effect to product cards
+            const productCards = document.querySelectorAll('.product-card');
+            productCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px) scale(1.02)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            console.log('vOz Shop - Website loaded successfully! 🚀');
+        });
+
+        // Add click tracking for analytics (placeholder)
+        function trackClick(element, action) {
+            console.log(`Clicked: ${action} on ${element}`);
+            // Here you would normally send to analytics service
+        }
+
+        // Add click handlers to Shopee buttons
+        document.querySelectorAll('.btn-shopee-product').forEach(btn => {
+            btn.addEventListener('click', () => trackClick('Product', 'Shopee Purchase'));
+        });
+
+        // Add click handlers to Zalo buttons
+        document.querySelectorAll('.btn-zalo-product').forEach(btn => {
+            btn.addEventListener('click', () => trackClick('Product', 'Zalo Chat'));
+        });
+    </script>
+</body>
+</html>
