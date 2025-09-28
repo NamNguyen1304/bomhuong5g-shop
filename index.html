@@ -239,6 +239,18 @@
         </div>
     </footer>
 
-    <script src="js/script.js"></script>
+    <script src="js/script.js?v=1.0"></script>
+    <!-- Force chatbot load -->
+    <script>
+        // Ensure chatbot loads
+        console.log('🤖 Loading vOz Chatbot...');
+        setTimeout(function() {
+            if (!document.getElementById('chatbot-container')) {
+                console.error('❌ Chatbot not loaded!');
+            } else {
+                console.log('✅ Chatbot loaded successfully!');
+            }
+        }, 1000);
+    </script>
 </body>
 </html>
