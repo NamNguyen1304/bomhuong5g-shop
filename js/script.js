@@ -515,6 +515,46 @@ document.head.appendChild(style);
 // ========== CHATBOT FUNCTIONALITY ==========
 
 let chatbotOpen = false;
+
+// Rate limiting for AI requests
+const rateLimiter = {
+    requests: {},
+    maxRequests: 10, // Max 10 requests per hour per user
+    timeWindow: 60 * 60 * 1000, // 1 hour in milliseconds
+
+    canMakeRequest: function(userIP) {
+        const now = Date.now();
+        const userKey = userIP || 'anonymous';
+
+        if (!this.requests[userKey]) {
+            this.requests[userKey] = [];
+        }
+
+        // Remove old requests outside time window
+        this.requests[userKey] = this.requests[userKey].filter(
+            timestamp => now - timestamp < this.timeWindow
+        );
+
+        // Check if under limit
+        if (this.requests[userKey].length < this.maxRequests) {
+            this.requests[userKey].push(now);
+            return true;
+        }
+
+        return false;
+    },
+
+    getTimeUntilReset: function(userIP) {
+        const userKey = userIP || 'anonymous';
+        if (!this.requests[userKey] || this.requests[userKey].length === 0) {
+            return 0;
+        }
+
+        const oldestRequest = Math.min(...this.requests[userKey]);
+        const resetTime = oldestRequest + this.timeWindow - Date.now();
+        return Math.max(0, Math.ceil(resetTime / (60 * 1000))); // minutes
+    }
+};
 const chatbotResponses = {
     products: {
         'samsung': {
@@ -658,24 +698,72 @@ function sendChatbotMessage() {
     const input = document.getElementById('chatbot-input');
     const message = input.value.trim();
 
-    if (!message) return;
+    // Input validation and sanitization
+    if (!message || message.length > 500) {
+        if (message.length > 500) {
+            addChatbotMessage('❌ Tin nhắn quá dài! Vui lòng nhập dưới 500 ký tự.', 'bot');
+        }
+        return;
+    }
 
-    // Add user message
-    addChatbotMessage(message, 'user');
+    // Basic spam detection
+    if (isSpamMessage(message)) {
+        addChatbotMessage('🚫 Tin nhắn không phù hợp. Vui lòng đặt câu hỏi về sản phẩm của vOz Shop!', 'bot');
+        return;
+    }
+
+    // Add user message (sanitized)
+    const sanitizedMessage = sanitizeInput(message);
+    addChatbotMessage(sanitizedMessage, 'user');
     input.value = '';
 
-    // Process and respond
-    setTimeout(() => {
-        const response = processChatbotMessage(message);
+    // Show typing indicator
+    addChatbotMessage('🤖 Đang suy nghĩ...', 'bot', 'typing');
+
+    // Try AI response first, fallback to rule-based
+    sendToAI(sanitizedMessage).then(aiResponse => {
+        // Remove typing indicator
+        removeTypingMessage();
+        addChatbotMessage(aiResponse, 'bot');
+    }).catch(error => {
+        console.log('AI failed, using fallback:', error);
+        // Remove typing indicator and use rule-based fallback
+        removeTypingMessage();
+        const response = processChatbotMessage(sanitizedMessage);
         addChatbotMessage(response, 'bot');
-    }, 500);
+    });
+}
+
+// Sanitize user input
+function sanitizeInput(input) {
+    return input
+        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') // Remove script tags
+        .replace(/<[^>]*>/g, '') // Remove HTML tags
+        .replace(/javascript:/gi, '') // Remove javascript: URLs
+        .substring(0, 500); // Limit length
+}
+
+// Basic spam detection
+function isSpamMessage(message) {
+    const spamPatterns = [
+        /(.)\1{10,}/, // Repeated characters
+        /[🔥💰🎉]{5,}/, // Too many promotional emojis
+        /(http|https|www\.)/i, // URLs (prevent external links)
+        /(spam|advertisement|quảng cáo)/i // Spam keywords
+    ];
+
+    return spamPatterns.some(pattern => pattern.test(message));
 }
 
 // Add message to chatbot
-function addChatbotMessage(content, sender) {
+function addChatbotMessage(content, sender, messageType = 'normal') {
     const messagesContainer = document.getElementById('chatbot-messages');
     const messageDiv = document.createElement('div');
     messageDiv.className = `chatbot-message ${sender}-message`;
+
+    if (messageType === 'typing') {
+        messageDiv.id = 'typing-message';
+    }
 
     const messageContent = document.createElement('div');
     messageContent.className = 'message-content';
@@ -691,6 +779,159 @@ function addChatbotMessage(content, sender) {
 
     // Scroll to bottom
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+// Remove typing indicator
+function removeTypingMessage() {
+    const typingMessage = document.getElementById('typing-message');
+    if (typingMessage) {
+        typingMessage.remove();
+    }
+}
+
+// Send message to AI
+async function sendToAI(message) {
+    // Check rate limit first
+    if (!rateLimiter.canMakeRequest()) {
+        const resetTime = rateLimiter.getTimeUntilReset();
+        return `🚫 **Giới hạn số lượng tin nhắn**
+
+Bạn đã đạt giới hạn 10 câu hỏi AI/giờ để đảm bảo chất lượng dịch vụ.
+
+⏰ **Reset sau:** ${resetTime} phút
+
+💡 **Trong lúc chờ, bạn có thể:**
+• 📞 Gọi hotline: 0358602326
+• 💬 Chat Zalo: zalo.me/0358602326
+• 🛒 Mua trên Shopee: shopee.vn/doanhan3004
+
+Cảm ơn bạn đã hiểu! 😊`;
+    }
+
+    const systemPrompt = createSystemPrompt();
+
+    // Try multiple free AI services with timeout
+    try {
+        // Add timeout to prevent long waits
+        const timeoutPromise = new Promise((_, reject) => {
+            setTimeout(() => reject(new Error('AI timeout')), 8000); // 8 second timeout
+        });
+
+        // Option 1: Use Hugging Face Inference API (free)
+        const aiPromise = callHuggingFaceAPI(systemPrompt, message);
+        return await Promise.race([aiPromise, timeoutPromise]);
+    } catch (error) {
+        console.log('AI service failed, using smart fallback:', error);
+        // Always fallback to enhanced local responses
+        return generateSmartResponse(message);
+    }
+}
+
+// Create system prompt for AI
+function createSystemPrompt() {
+    return `Bạn là vOz Bot, trợ lý AI tư vấn bán hàng chuyên nghiệp của vOz Shop - cửa hàng thiết bị mạng 5G tại Việt Nam.
+
+THÔNG TIN CỬA HÀNG:
+- Tên: vOz Shop
+- Địa chỉ: 40/43 Nguyễn Gián Thanh, P15, Q10, TP.HCM
+- Hotline: 0358602326
+- Shopee: shopee.vn/doanhan3004
+- Zalo: zalo.me/0358602326
+
+SẢN PHẨM CHÍNH:
+1. Samsung Galaxy 5G Mobile WiFi SCR01 - 2.700.000₫ (95% Like New)
+   - Router 5G di động, pin 5000mAh, màn hình 5.3"
+   - Tốc độ 2.2Gbps, kết nối 10 thiết bị
+
+2. Router WiFi 6 AX1800 Mesh - 1.890.000₫
+   - Phủ sóng 300m², WiFi 6, 80+ thiết bị
+
+3. Sim 5G Data Unlimited - 199.000₫/tháng
+   - Data không giới hạn, tốc độ 100-500Mbps
+
+CHÍNH SÁCH:
+- Giao hàng 2h tại TP.HCM, 1-2 ngày toàn quốc
+- Miễn phí ship đơn >500k
+- Bảo hành chính hãng 12-24 tháng
+- Hỗ trợ APN các nhà mạng VN
+
+Hãy trả lời thân thiện, chuyên nghiệp và luôn hướng khách hàng đến việc mua hàng. Sử dụng emoji phù hợp.`;
+}
+
+// Enhanced smart response generator
+function generateSmartResponse(message) {
+    const lowerMessage = message.toLowerCase();
+
+    // Check for specific keywords and generate contextual responses
+    if (lowerMessage.includes('hello') || lowerMessage.includes('xin chào') || lowerMessage.includes('chào')) {
+        return `Xin chào! 👋 Tôi là vOz Bot, trợ lý AI của vOz Shop.
+
+Tôi có thể giúp bạn:
+📱 Tư vấn Samsung Galaxy 5G SCR01 (2.7tr)
+📶 Router WiFi 6 AX1800 (1.89tr)
+📊 Sim 5G Unlimited (199k/tháng)
+⚙️ Hướng dẫn cài đặt APN
+💬 Kết nối tư vấn viên
+
+Bạn quan tâm sản phẩm nào ạ? 😊`;
+    }
+
+    if (lowerMessage.includes('giá') && lowerMessage.includes('samsung')) {
+        return `📱 **Samsung Galaxy 5G Mobile WiFi SCR01:**
+
+💰 **Giá đặc biệt:** 2.700.000₫ (tình trạng 95% Like New)
+🔥 **Tiết kiệm:** 1.800.000₫ so với giá gốc 4.500.000₫
+
+✨ **Tại sao chọn SCR01:**
+• Tốc độ 5G siêu nhanh 2.2Gbps
+• Pin khủng 5000mAh dùng 16h
+• Màn hình cảm ứng 5.3" như smartphone
+• Hỗ trợ tất cả mạng 5G Việt Nam
+
+📞 **Đặt hàng ngay:** 0358602326
+🛒 **Hoặc mua trên Shopee:** shopee.vn/doanhan3004
+
+Bạn có muốn tôi tư vấn thêm về sản phẩm này không? 😊`;
+    }
+
+    // Continue with existing processChatbotMessage logic for other cases
+    const advancedResponse = processAdvancedMessage(message);
+    if (advancedResponse) {
+        return advancedResponse;
+    }
+
+    return processChatbotMessage(message);
+}
+
+// Hugging Face API call (free tier)
+async function callHuggingFaceAPI(systemPrompt, userMessage) {
+    const response = await fetch('https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            inputs: `${systemPrompt}\n\nKhách hàng: ${userMessage}\nvOz Bot:`,
+            parameters: {
+                max_length: 500,
+                temperature: 0.7,
+                do_sample: true
+            }
+        })
+    });
+
+    if (!response.ok) {
+        throw new Error('Hugging Face API failed');
+    }
+
+    const data = await response.json();
+    if (data.generated_text) {
+        // Extract just the bot response
+        const botResponse = data.generated_text.split('vOz Bot:').pop().trim();
+        return botResponse || generateSmartResponse(userMessage);
+    } else {
+        throw new Error('No response from AI');
+    }
 }
 
 // Process chatbot message
@@ -1080,5 +1321,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }, 3000);
 
-    console.log('🤖 vOz Chatbot with APN setup initialized successfully!');
+    console.log('🤖 vOz AI Chatbot initialized successfully!');
+    console.log('🧠 Features: Real AI responses + Smart fallback');
+    console.log('🚀 Ready to serve customers with AI power!');
 });
