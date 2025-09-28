@@ -810,20 +810,34 @@ Cảm ơn bạn đã hiểu! 😊`;
 
     const systemPrompt = createSystemPrompt();
 
-    // Try multiple free AI services with timeout
+    // Use AI directly without fallback to rule-based responses
     try {
         // Add timeout to prevent long waits
         const timeoutPromise = new Promise((_, reject) => {
-            setTimeout(() => reject(new Error('AI timeout')), 8000); // 8 second timeout
+            setTimeout(() => reject(new Error('AI timeout')), 10000); // 10 second timeout
         });
 
-        // Option 1: Use Free AI API
+        // Use Free AI API
         const aiPromise = callFreeAI(systemPrompt, message);
-        return await Promise.race([aiPromise, timeoutPromise]);
+        const aiResponse = await Promise.race([aiPromise, timeoutPromise]);
+
+        // If AI returns a valid response, use it
+        if (aiResponse && aiResponse.trim().length > 10) {
+            return aiResponse;
+        } else {
+            throw new Error('AI response too short or empty');
+        }
     } catch (error) {
-        console.log('AI service failed, using smart fallback:', error);
-        // Always fallback to enhanced local responses
-        return generateSmartResponse(message);
+        console.log('AI service failed:', error);
+        // Only use simple error message, no complex fallback
+        return `🤖 **Xin lỗi, AI đang bảo trì!**
+
+Vui lòng liên hệ trực tiếp:
+📞 **Hotline:** 0358602326
+💬 **Zalo:** zalo.me/0358602326
+🛒 **Shopee:** shopee.vn/doanhan3004
+
+Cảm ơn bạn! 😊`;
     }
 }
 
@@ -903,30 +917,58 @@ Bạn có muốn tôi tư vấn thêm về sản phẩm này không? 😊`;
     return processChatbotMessage(message);
 }
 
-// Free AI API call using OpenAI-compatible service
+// Free AI API call using various services
 async function callFreeAI(systemPrompt, userMessage) {
-    // Try multiple free AI services
+    // Try multiple free AI services in order
     const freeAIServices = [
-        // Service 1: Use a free OpenAI-compatible API
+        // Groq (free tier)
         {
-            url: 'https://api.deepinfra.com/v1/openai/chat/completions',
-            model: 'meta-llama/Llama-2-7b-chat-hf'
+            name: 'Groq',
+            url: 'https://api.groq.com/openai/v1/chat/completions',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer gsk_demo_key' // Use demo/free key
+            },
+            model: 'llama3-8b-8192'
         },
-        // Service 2: Another free service
+        // Hugging Face Inference API (free)
         {
+            name: 'HuggingFace',
+            url: 'https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            customFormat: true
+        },
+        // Together AI (free tier)
+        {
+            name: 'Together',
             url: 'https://api.together.xyz/v1/chat/completions',
-            model: 'togethercomputer/llama-2-7b-chat'
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            model: 'meta-llama/Llama-2-7b-chat-hf'
         }
     ];
 
     for (const service of freeAIServices) {
         try {
-            const response = await fetch(service.url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
+            console.log(`Trying ${service.name} AI service...`);
+
+            let requestBody;
+            if (service.customFormat) {
+                // HuggingFace format
+                requestBody = JSON.stringify({
+                    inputs: `${systemPrompt}\n\nUser: ${userMessage}\nBot:`,
+                    parameters: {
+                        max_length: 200,
+                        temperature: 0.7,
+                        return_full_text: false
+                    }
+                });
+            } else {
+                // OpenAI format
+                requestBody = JSON.stringify({
                     model: service.model,
                     messages: [
                         {
@@ -940,17 +982,40 @@ async function callFreeAI(systemPrompt, userMessage) {
                     ],
                     max_tokens: 300,
                     temperature: 0.7
-                })
+                });
+            }
+
+            const response = await fetch(service.url, {
+                method: 'POST',
+                headers: service.headers,
+                body: requestBody
             });
 
             if (response.ok) {
                 const data = await response.json();
-                if (data.choices && data.choices[0] && data.choices[0].message) {
-                    return data.choices[0].message.content.trim();
+                let aiResponse = '';
+
+                if (service.customFormat) {
+                    // HuggingFace response format
+                    if (Array.isArray(data) && data[0] && data[0].generated_text) {
+                        aiResponse = data[0].generated_text.trim();
+                    }
+                } else {
+                    // OpenAI response format
+                    if (data.choices && data.choices[0] && data.choices[0].message) {
+                        aiResponse = data.choices[0].message.content.trim();
+                    }
                 }
+
+                if (aiResponse && aiResponse.length > 10) {
+                    console.log(`${service.name} AI responded successfully`);
+                    return aiResponse;
+                }
+            } else {
+                console.log(`${service.name} API error:`, response.status, response.statusText);
             }
         } catch (error) {
-            console.log(`AI service ${service.url} failed:`, error);
+            console.log(`${service.name} service failed:`, error);
             continue;
         }
     }
