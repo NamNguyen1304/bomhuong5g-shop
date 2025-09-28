@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý đơn hàng - WIFI 5G Shop Bom Huong</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .admin-container {
+            max-width: 1200px;
+            margin: 100px auto 20px;
+            padding: 2rem;
+        }
+        
+        .admin-header {
+            background: #2c3e50;
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+        
+        .orders-section {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .orders-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 1rem;
+        }
+        
+        .filter-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .filter-select {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        .orders-table th,
+        .orders-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .orders-table th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-confirmed {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-shipped {
+            background: #cce5ff;
+            color: #004085;
+        }
+        
+        .status-delivered {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-small {
+            padding: 0.3rem 0.8rem;
+            font-size: 0.9rem;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-view {
+            background: #3498db;
+            color: white;
+        }
+        
+        .btn-update {
+            background: #f39c12;
+            color: white;
+        }
+        
+        .order-detail-modal .modal-content {
+            max-width: 800px;
+        }
+        
+        .order-items {
+            margin: 1rem 0;
+        }
+        
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .customer-info {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+        }
+        
+        .update-status-form {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid #ecf0f1;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>Quản lý WIFI 5G Shop Bom Huong</h1>
+            <p>Bảng điều khiển quản trị</p>
+            <div style="margin-top: 1rem;">
+                <a href="cache.html" style="color: white; text-decoration: none; background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 5px; margin-right: 1rem;">🗄️ Xem Cache</a>
+                <a href="index.html" style="color: white; text-decoration: none; background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 5px;">← Trang chủ</a>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="total-orders">0</div>
+                <div class="stat-label">Tổng đơn hàng</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="pending-orders">0</div>
+                <div class="stat-label">Đơn chờ xử lý</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="total-revenue">0đ</div>
+                <div class="stat-label">Doanh thu</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="today-orders">0</div>
+                <div class="stat-label">Đơn hôm nay</div>
+            </div>
+        </div>
+
+        <div class="orders-section">
+            <div class="orders-header">
+                <h2>Danh sách đơn hàng</h2>
+                <div class="filter-controls">
+                    <label>Lọc theo trạng thái:</label>
+                    <select class="filter-select" id="status-filter">
+                        <option value="all">Tất cả</option>
+                        <option value="pending">Chờ xử lý</option>
+                        <option value="confirmed">Đã xác nhận</option>
+                        <option value="shipped">Đang giao</option>
+                        <option value="delivered">Đã giao</option>
+                    </select>
+                    <button class="btn-primary" onclick="refreshOrders()">Làm mới</button>
+                </div>
+            </div>
+
+            <table class="orders-table">
+                <thead>
+                    <tr>
+                        <th>Mã đơn</th>
+                        <th>Khách hàng</th>
+                        <th>Số điện thoại</th>
+                        <th>Ngày đặt</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody id="orders-list">
+                    <!-- Orders will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Order Detail Modal -->
+    <div id="order-detail-modal" class="modal order-detail-modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Chi tiết đơn hàng</h2>
+            <div id="order-detail-content">
+                <!-- Order details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let orders = [];
+        
+        // Initialize admin panel
+        document.addEventListener('DOMContentLoaded', function() {
+            loadOrders();
+            updateStats();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Status filter
+            document.getElementById('status-filter').addEventListener('change', function() {
+                displayOrders(this.value);
+            });
+
+            // Modal close
+            document.querySelector('#order-detail-modal .close').addEventListener('click', function() {
+                document.getElementById('order-detail-modal').style.display = 'none';
+            });
+
+            // Close modal when clicking outside
+            window.addEventListener('click', function(e) {
+                const modal = document.getElementById('order-detail-modal');
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+
+        function loadOrders() {
+            orders = JSON.parse(localStorage.getItem('orders')) || [];
+            displayOrders('all');
+        }
+
+        function displayOrders(filter = 'all') {
+            const ordersList = document.getElementById('orders-list');
+            
+            let filteredOrders = orders;
+            if (filter !== 'all') {
+                filteredOrders = orders.filter(order => order.status === filter);
+            }
+
+            if (filteredOrders.length === 0) {
+                ordersList.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #7f8c8d;">Không có đơn hàng nào</td></tr>';
+                return;
+            }
+
+            ordersList.innerHTML = filteredOrders.map(order => `
+                <tr>
+                    <td><strong>${order.id}</strong></td>
+                    <td>${order.customer.name}</td>
+                    <td>${order.customer.phone}</td>
+                    <td>${formatDate(order.date)}</td>
+                    <td>${formatPrice(order.total)}</td>
+                    <td><span class="status-badge status-${order.status}">${getStatusText(order.status)}</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-small btn-view" onclick="viewOrder('${order.id}')">Xem</button>
+                            <button class="btn-small btn-update" onclick="updateOrderStatus('${order.id}')">Cập nhật</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateStats() {
+            const totalOrders = orders.length;
+            const pendingOrders = orders.filter(o => o.status === 'pending').length;
+            const totalRevenue = orders.reduce((sum, order) => sum + order.total, 0);
+            
+            const today = new Date().toDateString();
+            const todayOrders = orders.filter(order => 
+                new Date(order.date).toDateString() === today
+            ).length;
+
+            document.getElementById('total-orders').textContent = totalOrders;
+            document.getElementById('pending-orders').textContent = pendingOrders;
+            document.getElementById('total-revenue').textContent = formatPrice(totalRevenue);
+            document.getElementById('today-orders').textContent = todayOrders;
+        }
+
+        function viewOrder(orderId) {
+            const order = orders.find(o => o.id === orderId);
+            if (!order) return;
+
+            const orderDetailContent = document.getElementById('order-detail-content');
+            orderDetailContent.innerHTML = `
+                <div class="customer-info">
+                    <h3>Thông tin khách hàng</h3>
+                    <p><strong>Tên:</strong> ${order.customer.name}</p>
+                    <p><strong>Điện thoại:</strong> ${order.customer.phone}</p>
+                    <p><strong>Email:</strong> ${order.customer.email}</p>
+                    <p><strong>Địa chỉ:</strong> ${order.customer.address}</p>
+                    ${order.customer.notes ? `<p><strong>Ghi chú:</strong> ${order.customer.notes}</p>` : ''}
+                </div>
+
+                <h3>Sản phẩm đặt hàng</h3>
+                <div class="order-items">
+                    ${order.items.map(item => `
+                        <div class="order-item">
+                            <span>${item.name} x${item.quantity}</span>
+                            <span>${formatPrice(item.price * item.quantity)}</span>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div style="text-align: right; font-size: 1.2rem; font-weight: bold; margin-top: 1rem;">
+                    <strong>Tổng cộng: ${formatPrice(order.total)}</strong>
+                </div>
+
+                <div class="update-status-form">
+                    <h3>Cập nhật trạng thái đơn hàng</h3>
+                    <select id="new-status-${orderId}" class="filter-select">
+                        <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Chờ xử lý</option>
+                        <option value="confirmed" ${order.status === 'confirmed' ? 'selected' : ''}>Đã xác nhận</option>
+                        <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>Đang giao</option>
+                        <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>Đã giao</option>
+                    </select>
+                    <button class="btn-primary" onclick="saveOrderStatus('${orderId}')" style="margin-left: 1rem;">Lưu thay đổi</button>
+                </div>
+            `;
+
+            document.getElementById('order-detail-modal').style.display = 'block';
+        }
+
+        function updateOrderStatus(orderId) {
+            viewOrder(orderId);
+        }
+
+        function saveOrderStatus(orderId) {
+            const newStatus = document.getElementById(`new-status-${orderId}`).value;
+            const orderIndex = orders.findIndex(o => o.id === orderId);
+            
+            if (orderIndex !== -1) {
+                orders[orderIndex].status = newStatus;
+                localStorage.setItem('orders', JSON.stringify(orders));
+                
+                displayOrders(document.getElementById('status-filter').value);
+                updateStats();
+                
+                document.getElementById('order-detail-modal').style.display = 'none';
+                alert('Đã cập nhật trạng thái đơn hàng thành công!');
+            }
+        }
+
+        function refreshOrders() {
+            loadOrders();
+            updateStats();
+            alert('Đã làm mới dữ liệu!');
+        }
+
+        function getStatusText(status) {
+            const statusMap = {
+                'pending': 'Chờ xử lý',
+                'confirmed': 'Đã xác nhận',
+                'shipped': 'Đang giao',
+                'delivered': 'Đã giao'
+            };
+            return statusMap[status] || status;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('vi-VN') + ' ' + date.toLocaleTimeString('vi-VN');
+        }
+
+        function formatPrice(price) {
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            }).format(price);
+        }
+    </script>
+</body>
+</html>

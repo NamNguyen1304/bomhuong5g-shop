@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cache Viewer - WIFI 5G Shop Bom Huong</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .cache-container {
+            max-width: 1200px;
+            margin: 100px auto 20px;
+            padding: 2rem;
+        }
+
+        .cache-header {
+            background: #34495e;
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .cache-section {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .cache-section h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .cache-item {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .cache-key {
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 0.5rem;
+        }
+
+        .cache-value {
+            background: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 3px;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .cache-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-cache {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-refresh {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-clear {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-export {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-back {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-cache:hover {
+            opacity: 0.8;
+            transform: translateY(-2px);
+        }
+
+        .cache-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #3498db;
+            display: block;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .empty-cache {
+            text-align: center;
+            color: #7f8c8d;
+            font-style: italic;
+            padding: 2rem;
+        }
+
+        .json-formatted {
+            color: #2c3e50;
+        }
+
+        .json-key {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .json-string {
+            color: #27ae60;
+        }
+
+        .json-number {
+            color: #f39c12;
+        }
+
+        .json-boolean {
+            color: #9b59b6;
+        }
+
+        .json-null {
+            color: #95a5a6;
+        }
+    </style>
+</head>
+<body>
+    <div class="cache-container">
+        <div class="cache-header">
+            <h1>🗄️ Cache Viewer</h1>
+            <p>Xem và quản lý dữ liệu cache của ứng dụng</p>
+        </div>
+
+        <div class="cache-controls">
+            <button class="btn-cache btn-refresh" onclick="refreshCache()">🔄 Làm mới</button>
+            <button class="btn-cache btn-clear" onclick="clearAllCache()">🗑️ Xóa tất cả</button>
+            <button class="btn-cache btn-export" onclick="exportCache()">📥 Xuất dữ liệu</button>
+            <a href="index.html" class="btn-cache btn-back">← Quay lại trang chủ</a>
+        </div>
+
+        <div class="cache-stats" id="cache-stats">
+            <!-- Stats will be loaded here -->
+        </div>
+
+        <div class="cache-section">
+            <h2>📊 Dữ liệu localStorage</h2>
+            <div id="cache-data">
+                <!-- Cache data will be loaded here -->
+            </div>
+        </div>
+
+        <div class="cache-section">
+            <h2>🛒 Dữ liệu giỏ hàng</h2>
+            <div id="cart-data">
+                <!-- Cart data will be loaded here -->
+            </div>
+        </div>
+
+        <div class="cache-section">
+            <h2>📋 Dữ liệu đơn hàng</h2>
+            <div id="orders-data">
+                <!-- Orders data will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize cache viewer
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCacheData();
+        });
+
+        // Load and display cache data
+        function loadCacheData() {
+            displayStats();
+            displayAllLocalStorage();
+            displayCartData();
+            displayOrdersData();
+        }
+
+        // Display cache statistics
+        function displayStats() {
+            const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+
+            const totalCartItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+            const totalCacheSize = JSON.stringify(localStorage).length;
+            const cacheKeys = Object.keys(localStorage).length;
+
+            document.getElementById('cache-stats').innerHTML = `
+                <div class="stat-card">
+                    <span class="stat-number">${cacheKeys}</span>
+                    <span class="stat-label">Cache Keys</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">${totalCartItems}</span>
+                    <span class="stat-label">Sản phẩm trong giỏ</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">${orders.length}</span>
+                    <span class="stat-label">Tổng đơn hàng</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">${(totalCacheSize / 1024).toFixed(2)} KB</span>
+                    <span class="stat-label">Kích thước cache</span>
+                </div>
+            `;
+        }
+
+        // Display all localStorage data
+        function displayAllLocalStorage() {
+            const cacheDataDiv = document.getElementById('cache-data');
+
+            if (localStorage.length === 0) {
+                cacheDataDiv.innerHTML = '<div class="empty-cache">Không có dữ liệu cache nào</div>';
+                return;
+            }
+
+            let html = '';
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const value = localStorage.getItem(key);
+
+                html += `
+                    <div class="cache-item">
+                        <div class="cache-key">🔑 ${key}</div>
+                        <div class="cache-value">${formatJSON(value)}</div>
+                        <button class="btn-cache btn-clear" style="margin-top: 1rem; padding: 0.5rem 1rem;" onclick="deleteCacheItem('${key}')">
+                            🗑️ Xóa
+                        </button>
+                    </div>
+                `;
+            }
+
+            cacheDataDiv.innerHTML = html;
+        }
+
+        // Display cart data
+        function displayCartData() {
+            const cartDataDiv = document.getElementById('cart-data');
+            const cartData = JSON.parse(localStorage.getItem('cart')) || [];
+
+            if (cartData.length === 0) {
+                cartDataDiv.innerHTML = '<div class="empty-cache">Giỏ hàng trống</div>';
+                return;
+            }
+
+            let html = '<div class="cache-item">';
+            html += '<div class="cache-key">🛒 Sản phẩm trong giỏ hàng</div>';
+            html += '<div class="cache-value">';
+
+            cartData.forEach((item, index) => {
+                html += `
+                    <div style="margin-bottom: 1rem; padding: 1rem; background: #ecf0f1; border-radius: 5px;">
+                        <strong>${item.name}</strong><br>
+                        Giá: ${formatPrice(item.price)}<br>
+                        Số lượng: ${item.quantity}<br>
+                        Tổng: ${formatPrice(item.price * item.quantity)}
+                    </div>
+                `;
+            });
+
+            html += '</div></div>';
+            cartDataDiv.innerHTML = html;
+        }
+
+        // Display orders data
+        function displayOrdersData() {
+            const ordersDataDiv = document.getElementById('orders-data');
+            const ordersData = JSON.parse(localStorage.getItem('orders')) || [];
+
+            if (ordersData.length === 0) {
+                ordersDataDiv.innerHTML = '<div class="empty-cache">Chưa có đơn hàng nào</div>';
+                return;
+            }
+
+            let html = '';
+            ordersData.forEach((order, index) => {
+                html += `
+                    <div class="cache-item">
+                        <div class="cache-key">📋 Đơn hàng #${order.id}</div>
+                        <div class="cache-value">
+                            <div style="margin-bottom: 1rem;">
+                                <strong>Khách hàng:</strong> ${order.customer.name}<br>
+                                <strong>Điện thoại:</strong> ${order.customer.phone}<br>
+                                <strong>Email:</strong> ${order.customer.email}<br>
+                                <strong>Địa chỉ:</strong> ${order.customer.address}<br>
+                                <strong>Ngày đặt:</strong> ${formatDate(order.date)}<br>
+                                <strong>Trạng thái:</strong> ${getStatusText(order.status)}<br>
+                                <strong>Tổng tiền:</strong> ${formatPrice(order.total)}
+                            </div>
+                            <div>
+                                <strong>Sản phẩm:</strong>
+                                <ul style="margin: 0.5rem 0;">
+                                    ${order.items.map(item => `
+                                        <li>${item.name} x${item.quantity} = ${formatPrice(item.price * item.quantity)}</li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            ordersDataDiv.innerHTML = html;
+        }
+
+        // Format JSON for display
+        function formatJSON(jsonString) {
+            try {
+                const parsed = JSON.parse(jsonString);
+                return syntaxHighlight(JSON.stringify(parsed, null, 2));
+            } catch (e) {
+                return jsonString;
+            }
+        }
+
+        // Syntax highlighting for JSON
+        function syntaxHighlight(json) {
+            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                var cls = 'json-number';
+                if (/^"/.test(match)) {
+                    if (/:$/.test(match)) {
+                        cls = 'json-key';
+                    } else {
+                        cls = 'json-string';
+                    }
+                } else if (/true|false/.test(match)) {
+                    cls = 'json-boolean';
+                } else if (/null/.test(match)) {
+                    cls = 'json-null';
+                }
+                return '<span class="' + cls + '">' + match + '</span>';
+            });
+        }
+
+        // Delete specific cache item
+        function deleteCacheItem(key) {
+            if (confirm(`Bạn có chắc chắn muốn xóa cache "${key}"?`)) {
+                localStorage.removeItem(key);
+                loadCacheData();
+                showNotification(`Đã xóa cache "${key}"`);
+            }
+        }
+
+        // Clear all cache
+        function clearAllCache() {
+            if (confirm('Bạn có chắc chắn muốn xóa tất cả dữ liệu cache? Hành động này không thể hoàn tác!')) {
+                localStorage.clear();
+                loadCacheData();
+                showNotification('Đã xóa tất cả dữ liệu cache');
+            }
+        }
+
+        // Refresh cache data
+        function refreshCache() {
+            loadCacheData();
+            showNotification('Đã làm mới dữ liệu cache');
+        }
+
+        // Export cache data
+        function exportCache() {
+            const cacheData = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const value = localStorage.getItem(key);
+                try {
+                    cacheData[key] = JSON.parse(value);
+                } catch (e) {
+                    cacheData[key] = value;
+                }
+            }
+
+            const dataStr = JSON.stringify(cacheData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `bomhuong5g-cache-${new Date().toISOString().slice(0, 10)}.json`;
+            link.click();
+
+            URL.revokeObjectURL(url);
+            showNotification('Đã xuất dữ liệu cache');
+        }
+
+        // Helper functions
+        function formatPrice(price) {
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            }).format(price);
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('vi-VN') + ' ' + date.toLocaleTimeString('vi-VN');
+        }
+
+        function getStatusText(status) {
+            const statusMap = {
+                'pending': 'Chờ xử lý',
+                'confirmed': 'Đã xác nhận',
+                'shipped': 'Đang giao',
+                'delivered': 'Đã giao'
+            };
+            return statusMap[status] || status;
+        }
+
+        // Show notification
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #27ae60;
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 5px;
+                z-index: 3000;
+                animation: slideIn 0.3s ease-out;
+            `;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
+        }
+
+        // Add CSS for animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

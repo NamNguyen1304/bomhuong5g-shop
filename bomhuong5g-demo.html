@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WIFI 5G Shop Bom Huong - Kết nối tốc độ cao</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header & Navigation */
+        .navbar {
+            background: #2c3e50;
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand h1 {
+            color: #3498db;
+            font-size: 1.8rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            color: #ecf0f1;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: #3498db;
+        }
+
+        .cart-btn {
+            background: #e74c3c;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 150px 0 100px;
+            margin-top: 80px;
+        }
+
+        .hero h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+
+        /* Products Section */
+        .products {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+
+        .products h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #2c3e50;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            background: #ecf0f1;
+        }
+
+        .product-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+
+        .price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 1rem;
+        }
+
+        .features {
+            list-style: none;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .features li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #ecf0f1;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .features li:before {
+            content: "✓";
+            color: #27ae60;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .btn-add-cart {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background 0.3s;
+            width: 100%;
+        }
+
+        .btn-add-cart:hover {
+            background: #219a52;
+        }
+
+        /* About Section */
+        .about {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .about h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #2c3e50;
+        }
+
+        .about p {
+            text-align: center;
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+            color: #7f8c8d;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .feature h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #3498db;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 80px 0;
+            background: #2c3e50;
+            color: white;
+        }
+
+        .contact h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .contact-info h3 {
+            color: #3498db;
+            margin-bottom: 1rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            right: 20px;
+            top: 15px;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .cart-total {
+            text-align: right;
+            padding: 1rem;
+            border-top: 2px solid #3498db;
+            margin-top: 1rem;
+        }
+
+        .btn-checkout {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 1rem;
+            transition: background 0.3s;
+        }
+
+        .btn-checkout:hover {
+            background: #c0392b;
+        }
+
+        /* Footer */
+        footer {
+            background: #34495e;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar .container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-menu {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .hero {
+                padding: 120px 0 80px;
+            }
+
+            .hero h2 {
+                font-size: 2rem;
+            }
+
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .product-card {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: #27ae60;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            z-index: 3000;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+
+        .cart-item {
+            display: grid;
+            grid-template-columns: 60px 1fr auto auto auto;
+            gap: 1rem;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .qty-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qty-btn:hover {
+            background: #2980b9;
+        }
+
+        .remove-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .remove-btn:hover {
+            background: #c0392b;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            height: 80px;
+            resize: vertical;
+        }
+
+        .btn-confirm-order {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .btn-confirm-order:hover {
+            background: #219a52;
+        }
+
+        .empty-cart {
+            text-align: center;
+            color: #7f8c8d;
+            font-style: italic;
+            padding: 2rem;
+        }
+
+        .order-summary {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .demo-banner {
+            background: #f39c12;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-banner">
+        🌟 DEMO: WIFI 5G Shop Bom Huong - Website bán Samsung SCR01 5G 🌟
+    </div>
+
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-brand">
+                    <h1>WIFI 5G Shop Bom Huong</h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#home">Trang chủ</a></li>
+                    <li><a href="#products">Sản phẩm</a></li>
+                    <li><a href="#about">Giới thiệu</a></li>
+                    <li><a href="#contact">Liên hệ</a></li>
+                    <li><a href="#cart" class="cart-btn">Giỏ hàng (<span id="cart-count">0</span>)</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="container">
+                <h2>Samsung Galaxy 5G Mobile WiFi SCR01 - Kết nối siêu tốc</h2>
+                <p>Trải nghiệm internet tốc độ cao với công nghệ 5G tiên tiến</p>
+                <a href="#products" class="btn-primary">Xem sản phẩm</a>
+            </div>
+        </section>
+
+        <section id="products" class="products">
+            <div class="container">
+                <h2>Sản phẩm nổi bật</h2>
+                <div class="product-grid">
+                    <div class="product-card" data-id="1">
+                        <img src="https://www.4gltemall.com/media/catalog/product/cache/1/image/650x650/9df78eab33525d08d6e5fb8d27136e95/s/a/samsung_galaxy_5g_mobile_wifi_scr01_.png" alt="Samsung Galaxy 5G Mobile WiFi SCR01">
+                        <h3>Samsung Galaxy 5G Mobile WiFi SCR01</h3>
+                        <p class="price">4,500,000 VNĐ</p>
+                        <ul class="features">
+                            <li>Tốc độ 5G lên đến 2.2Gbps</li>
+                            <li>Màn hình LCD 5.3 inch (1480x720)</li>
+                            <li>Pin 5000mAh - 16h sử dụng</li>
+                            <li>Kết nối tối đa 10 thiết bị</li>
+                            <li>Chipset MediaTek Dimensity 720</li>
+                        </ul>
+                        <button class="btn-add-cart" onclick="addToCart(1)">Thêm vào giỏ</button>
+                    </div>
+
+                    <div class="product-card" data-id="2">
+                        <img src="https://www.4gltemall.com/media/catalog/product/cache/1/image/650x650/9df78eab33525d08d6e5fb8d27136e95/s/a/samsung_galaxy_5g_mobile_wifi_scr01_.png" alt="Samsung SCR01 5G Pro Package">
+                        <h3>Samsung SCR01 5G Pro Package</h3>
+                        <p class="price">5,500,000 VNĐ</p>
+                        <ul class="features">
+                            <li>Samsung SCR01 5G Router</li>
+                            <li>Pin 5000mAh + Pin dự phòng 10000mAh</li>
+                            <li>Ốp lưng bảo vệ cao cấp</li>
+                            <li>Cáp USB-C + Adapter sạc nhanh</li>
+                            <li>Bảo hành 18 tháng</li>
+                        </ul>
+                        <button class="btn-add-cart" onclick="addToCart(2)">Thêm vào giỏ</button>
+                    </div>
+
+                    <div class="product-card" data-id="3">
+                        <img src="https://www.4gltemall.com/media/catalog/product/cache/1/image/650x650/9df78eab33525d08d6e5fb8d27136e95/s/a/samsung_galaxy_5g_mobile_wifi_scr01_.png" alt="Samsung SCR01 5G Business Package">
+                        <h3>Samsung SCR01 5G Business Package</h3>
+                        <p class="price">7,500,000 VNĐ</p>
+                        <ul class="features">
+                            <li>Sim 5G unlimited 12 tháng</li>
+                            <li>Đế sạc không dây Qi</li>
+                            <li>Pin 5000mAh + 2x Pin dự phòng</li>
+                            <li>Phần mềm quản lý doanh nghiệp</li>
+                            <li>Hỗ trợ VPN tích hợp</li>
+                            <li>Bảo hành 24 tháng</li>
+                        </ul>
+                        <button class="btn-add-cart" onclick="addToCart(3)">Thêm vào giỏ</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="about">
+            <div class="container">
+                <h2>Về chúng tôi</h2>
+                <p>Chúng tôi chuyên cung cấp các thiết bị WiFi 5G chất lượng cao, mang đến trải nghiệm internet tốc độ vượt trội cho khách hàng.</p>
+                <div class="features-grid">
+                    <div class="feature">
+                        <h3>Chất lượng cao</h3>
+                        <p>Sản phẩm chính hãng, được kiểm tra kỹ lưỡng</p>
+                    </div>
+                    <div class="feature">
+                        <h3>Giao hàng nhanh</h3>
+                        <p>Giao hàng trong 24h tại TP.HCM và Hà Nội</p>
+                    </div>
+                    <div class="feature">
+                        <h3>Bảo hành tốt</h3>
+                        <p>Bảo hành chính hãng, hỗ trợ 24/7</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact">
+            <div class="container">
+                <h2>Liên hệ</h2>
+                <div class="contact-info">
+                    <div>
+                        <h3>Hotline</h3>
+                        <p>1900-5555</p>
+                    </div>
+                    <div>
+                        <h3>Email</h3>
+                        <p>info@bomhuong5g.vn</p>
+                    </div>
+                    <div>
+                        <h3>Địa chỉ</h3>
+                        <p>123 Nguyễn Văn Cừ, Q1, TP.HCM</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="cart-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Giỏ hàng của bạn</h2>
+            <div id="cart-items"></div>
+            <div class="cart-total">
+                <h3>Tổng cộng: <span id="total-price">0 VNĐ</span></h3>
+            </div>
+            <button class="btn-checkout" onclick="checkout()">Đặt hàng</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 WIFI 5G Shop Bom Huong. Tất cả quyền được bảo lưu.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Product data
+        const products = {
+            1: {
+                id: 1,
+                name: "Samsung Galaxy 5G Mobile WiFi SCR01",
+                price: 4500000,
+                image: "https://www.4gltemall.com/media/catalog/product/cache/1/image/650x650/9df78eab33525d08d6e5fb8d27136e95/s/a/samsung_galaxy_5g_mobile_wifi_scr01_.png",
+                features: [
+                    "Tốc độ 5G lên đến 2.2Gbps",
+                    "Màn hình LCD 5.3 inch (1480x720)",
+                    "Pin 5000mAh - 16h sử dụng",
+                    "Kết nối tối đa 10 thiết bị",
+                    "Chipset MediaTek Dimensity 720",
+                    "Hỗ trợ Android 11 + OneUI 3.0",
+                    "Bảo hành 12 tháng"
+                ]
+            },
+            2: {
+                id: 2,
+                name: "Samsung SCR01 5G Pro Package",
+                price: 5500000,
+                image: "https://www.4gltemall.com/media/catalog/product/cache/1/image/650x650/9df78eab33525d08d6e5fb8d27136e95/s/a/samsung_galaxy_5g_mobile_wifi_scr01_.png",
+                features: [
+                    "Samsung SCR01 5G Router",
+                    "Tốc độ 5G lên đến 2.2Gbps",
+                    "Pin 5000mAh + Pin dự phòng 10000mAh",
+                    "Màn hình LCD 5.3 inch",
+                    "Kết nối 10 thiết bị đồng thời",
+                    "Ốp lưng bảo vệ cao cấp",
+                    "Cáp USB-C + Adapter sạc nhanh",
+                    "Bảo hành 18 tháng"
+                ]
+            },
+            3: {
+                id: 3,
+                name: "Samsung SCR01 5G Business Package",
+                price: 7500000,
+                image: "https://www.4gltemall.com/media/catalog/product/cache/1/image/650x650/9df78eab33525d08d6e5fb8d27136e95/s/a/samsung_galaxy_5g_mobile_wifi_scr01_.png",
+                features: [
+                    "Samsung SCR01 5G Router chính hãng",
+                    "Tốc độ 5G siêu cao 2.2Gbps",
+                    "Pin 5000mAh + 2x Pin dự phòng",
+                    "Đế sạc không dây Qi",
+                    "Sim 5G unlimited 12 tháng",
+                    "Phần mềm quản lý doanh nghiệp",
+                    "Hỗ trợ VPN tích hợp",
+                    "Bảo hành 24 tháng"
+                ]
+            }
+        };
+
+        // Shopping cart
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        // DOM elements
+        const cartModal = document.getElementById('cart-modal');
+        const cartCount = document.getElementById('cart-count');
+        const cartItems = document.getElementById('cart-items');
+        const totalPrice = document.getElementById('total-price');
+        const closeModal = document.querySelector('.close');
+        const cartBtn = document.querySelector('.cart-btn');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartDisplay();
+            setupEventListeners();
+        });
+
+        // Event listeners
+        function setupEventListeners() {
+            // Cart button click
+            cartBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                showCart();
+            });
+
+            // Close modal
+            closeModal.addEventListener('click', function() {
+                cartModal.style.display = 'none';
+            });
+
+            // Close modal when clicking outside
+            window.addEventListener('click', function(e) {
+                if (e.target === cartModal) {
+                    cartModal.style.display = 'none';
+                }
+            });
+
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        }
+
+        // Add to cart function
+        function addToCart(productId) {
+            const product = products[productId];
+            if (!product) return;
+
+            // Check if product already in cart
+            const existingItem = cart.find(item => item.id === productId);
+
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: productId,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image,
+                    quantity: 1
+                });
+            }
+
+            // Save to localStorage
+            localStorage.setItem('cart', JSON.stringify(cart));
+
+            // Update display
+            updateCartDisplay();
+
+            // Show success message
+            showNotification('Đã thêm sản phẩm vào giỏ hàng!');
+        }
+
+        // Remove from cart
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartDisplay();
+            displayCartItems();
+        }
+
+        // Update quantity
+        function updateQuantity(productId, newQuantity) {
+            if (newQuantity <= 0) {
+                removeFromCart(productId);
+                return;
+            }
+
+            const item = cart.find(item => item.id === productId);
+            if (item) {
+                item.quantity = newQuantity;
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartDisplay();
+                displayCartItems();
+            }
+        }
+
+        // Update cart display
+        function updateCartDisplay() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.textContent = totalItems;
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            totalPrice.textContent = formatPrice(total);
+        }
+
+        // Show cart modal
+        function showCart() {
+            displayCartItems();
+            cartModal.style.display = 'block';
+        }
+
+        // Display cart items
+        function displayCartItems() {
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p class="empty-cart">Giỏ hàng của bạn đang trống</p>';
+                return;
+            }
+
+            cartItems.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <img src="${item.image}" alt="${item.name}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;">
+                    <div class="item-details">
+                        <h4>${item.name}</h4>
+                        <p class="item-price">${formatPrice(item.price)}</p>
+                    </div>
+                    <div class="quantity-controls">
+                        <button onclick="updateQuantity(${item.id}, ${item.quantity - 1})" class="qty-btn">-</button>
+                        <span class="quantity">${item.quantity}</span>
+                        <button onclick="updateQuantity(${item.id}, ${item.quantity + 1})" class="qty-btn">+</button>
+                    </div>
+                    <div class="item-total">
+                        ${formatPrice(item.price * item.quantity)}
+                    </div>
+                    <button onclick="removeFromCart(${item.id})" class="remove-btn">×</button>
+                </div>
+            `).join('');
+        }
+
+        // Format price
+        function formatPrice(price) {
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            }).format(price);
+        }
+
+        // Checkout function
+        function checkout() {
+            if (cart.length === 0) {
+                alert('Giỏ hàng của bạn đang trống!');
+                return;
+            }
+
+            // Calculate total
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            // Show order form
+            showOrderForm(total);
+        }
+
+        // Show order form
+        function showOrderForm(total) {
+            const orderForm = `
+                <div class="order-form">
+                    <h3>Thông tin đặt hàng</h3>
+                    <form id="checkout-form">
+                        <div class="form-group">
+                            <label>Họ và tên:</label>
+                            <input type="text" id="customer-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Số điện thoại:</label>
+                            <input type="tel" id="customer-phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email:</label>
+                            <input type="email" id="customer-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Địa chỉ giao hàng:</label>
+                            <textarea id="customer-address" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Ghi chú:</label>
+                            <textarea id="order-notes"></textarea>
+                        </div>
+                        <div class="order-summary">
+                            <h4>Tổng đơn hàng: ${formatPrice(total)}</h4>
+                        </div>
+                        <button type="submit" class="btn-confirm-order">Xác nhận đặt hàng</button>
+                    </form>
+                </div>
+            `;
+
+            cartItems.innerHTML = orderForm;
+
+            // Handle form submission
+            document.getElementById('checkout-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                processOrder();
+            });
+        }
+
+        // Process order
+        function processOrder() {
+            const customerData = {
+                name: document.getElementById('customer-name').value,
+                phone: document.getElementById('customer-phone').value,
+                email: document.getElementById('customer-email').value,
+                address: document.getElementById('customer-address').value,
+                notes: document.getElementById('order-notes').value
+            };
+
+            // Generate order ID
+            const orderId = 'BH' + Date.now().toString().slice(-8);
+
+            // Save order to localStorage
+            const order = {
+                id: orderId,
+                customer: customerData,
+                items: [...cart],
+                total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+                date: new Date().toISOString(),
+                status: 'pending'
+            };
+
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            orders.push(order);
+            localStorage.setItem('orders', JSON.stringify(orders));
+
+            // Clear cart
+            cart = [];
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartDisplay();
+
+            // Show success message
+            cartModal.style.display = 'none';
+            showOrderSuccess(orderId);
+        }
+
+        // Show order success
+        function showOrderSuccess(orderId) {
+            const successModal = `
+                <div class="modal" id="success-modal" style="display: block;">
+                    <div class="modal-content">
+                        <h2 style="color: #27ae60; text-align: center;">✅ Đặt hàng thành công!</h2>
+                        <p style="text-align: center; margin: 2rem 0;">
+                            Mã đơn hàng của bạn: <strong>${orderId}</strong><br>
+                            Chúng tôi sẽ liên hệ với bạn trong vòng 24h để xác nhận đơn hàng.
+                        </p>
+                        <button onclick="closeSuccessModal()" class="btn-primary" style="width: 100%;">Đóng</button>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', successModal);
+        }
+
+        // Close success modal
+        function closeSuccessModal() {
+            const successModal = document.getElementById('success-modal');
+            if (successModal) {
+                successModal.remove();
+            }
+        }
+
+        // Show notification
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
