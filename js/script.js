@@ -511,3 +511,426 @@ style.textContent = `
 `;
 
 document.head.appendChild(style);
+
+// ========== CHATBOT FUNCTIONALITY ==========
+
+let chatbotOpen = false;
+const chatbotResponses = {
+    products: {
+        'samsung': {
+            name: 'Samsung Galaxy 5G Mobile WiFi SCR01',
+            price: '4.990.000₫',
+            originalPrice: '6.990.000₫',
+            discount: '29%',
+            info: 'Router 5G di động chính hãng của Samsung. Sử dụng chipset MediaTek Dimensity 720 mạnh mẽ, hệ điều hành Android 11 với OneUI 3.0. Thiết bị hoàn hảo cho doanh nhân, freelancer và những người thường xuyên di chuyển.',
+            specs: [
+                'Chipset: MediaTek Dimensity 720 (7nm)',
+                'Hệ điều hành: Android 11 + OneUI 3.0',
+                'Màn hình: 5.3" LCD Full HD (1480x720)',
+                'RAM: 2.5GB, Bộ nhớ: 32GB',
+                'Pin: 5000mAh - Sử dụng liên tục 16-20h',
+                'Tốc độ 5G: Download 2.2Gbps, Upload 183Mbps',
+                'Kết nối: Tối đa 10 thiết bị WiFi đồng thời',
+                'WiFi: 802.11a/b/g/n/ac (WiFi 5)',
+                'Tần số 5G: n28, n41, n77, n78, n79',
+                'Tần số 4G: B1, B3, B20, B41',
+                'Kích thước: 147×76×10.9mm',
+                'Trọng lượng: 203g (nhẹ như điện thoại)',
+                'Bảo hành: 12 tháng chính hãng'
+            ],
+            features: [
+                '🚀 Tốc độ 5G thực tế lên đến 2.2Gbps tại Việt Nam',
+                '📱 Màn hình cảm ứng 5.3" như smartphone, dễ sử dụng',
+                '🔋 Pin khủng 5000mAh, dùng cả ngày không lo hết pin',
+                '📡 Hỗ trợ tất cả nhà mạng 4G/5G Việt Nam (Viettel, VinaPhone, MobiFone)',
+                '💻 Kết nối đồng thời 10 thiết bị mà không giảm tốc độ',
+                '🌐 Hoạt động như smartphone: có thể cài app, lướt web trực tiếp',
+                '🔒 Bảo mật cao với WPA3, có thể đặt mật khẩu WiFi',
+                '📍 GPS tích hợp, có thể sử dụng Google Maps',
+                '🎯 Phù hợp: Du lịch, làm việc từ xa, live stream, gaming'
+            ],
+            useCases: [
+                'Du lịch: Internet tốc độ cao ở mọi nơi có sóng 5G',
+                'Làm việc từ xa: Họp online, video call HD không lag',
+                'Kinh doanh: Chia sẻ WiFi cho khách hàng tại sự kiện',
+                'Gaming: Ping thấp, tốc độ ổn định cho game online',
+                'Streaming: Live stream chất lượng cao trên Facebook, TikTok',
+                'Gia đình: WiFi dự phòng khi mạng nhà bị lỗi'
+            ]
+        },
+        'router': {
+            name: 'Router WiFi 6 AX1800 Mesh',
+            price: '2.490.000₫',
+            info: 'Router WiFi 6 công nghệ Mesh, phủ sóng toàn nhà 300m², hỗ trợ 80+ thiết bị.',
+            specs: ['WiFi 6 AX1800: 1.8Gbps', 'Phủ sóng: 300m²', '4 anten 5dBi', 'Hỗ trợ: 80+ thiết bị']
+        },
+        'sim': {
+            name: 'Sim 5G Data Unlimited',
+            price: '290.000₫/tháng',
+            info: 'Gói sim 5G không giới hạn dung lượng, tốc độ thực tế 100-500Mbps.',
+            specs: ['Data: Unlimited thực sự', 'Tốc độ: 100-500Mbps', 'Phủ sóng: 63 tỉnh thành', 'Không FUP']
+        }
+    },
+    faqs: {
+        shipping: 'Chúng tôi giao hàng miễn phí trong 2h tại TP.HCM, 1-2 ngày toàn quốc. Miễn phí ship cho đơn hàng trên 500k.',
+        warranty: 'Tất cả sản phẩm có bảo hành chính hãng 12-24 tháng. Hỗ trợ đổi trả trong 7 ngày.',
+        payment: 'Chúng tôi nhận thanh toán tiền mặt, chuyển khoản, và các ví điện tử phổ biến.',
+        genuine: 'Cam kết 100% hàng chính hãng, còn nguyên seal. Hoàn tiền 200% nếu phát hiện hàng fake.'
+    }
+};
+
+// Toggle chatbot window
+function toggleChatbot() {
+    const chatbotWindow = document.getElementById('chatbot-window');
+    const chatbotButton = document.getElementById('chatbot-button');
+
+    chatbotOpen = !chatbotOpen;
+
+    if (chatbotOpen) {
+        chatbotWindow.classList.remove('chatbot-hidden');
+        chatbotButton.style.transform = 'scale(0.9)';
+        document.getElementById('chatbot-input').focus();
+    } else {
+        chatbotWindow.classList.add('chatbot-hidden');
+        chatbotButton.style.transform = 'scale(1)';
+    }
+}
+
+// Handle Enter key in chatbot input
+function handleChatbotEnter(event) {
+    if (event.key === 'Enter') {
+        sendChatbotMessage();
+    }
+}
+
+// Send chatbot message
+function sendChatbotMessage() {
+    const input = document.getElementById('chatbot-input');
+    const message = input.value.trim();
+
+    if (!message) return;
+
+    // Add user message
+    addChatbotMessage(message, 'user');
+    input.value = '';
+
+    // Process and respond
+    setTimeout(() => {
+        const response = processChatbotMessage(message);
+        addChatbotMessage(response, 'bot');
+    }, 500);
+}
+
+// Add message to chatbot
+function addChatbotMessage(content, sender) {
+    const messagesContainer = document.getElementById('chatbot-messages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `chatbot-message ${sender}-message`;
+
+    const messageContent = document.createElement('div');
+    messageContent.className = 'message-content';
+
+    if (typeof content === 'string') {
+        messageContent.innerHTML = `<p>${content}</p>`;
+    } else {
+        messageContent.appendChild(content);
+    }
+
+    messageDiv.appendChild(messageContent);
+    messagesContainer.appendChild(messageDiv);
+
+    // Scroll to bottom
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+// Process chatbot message
+function processChatbotMessage(message) {
+    const lowerMessage = message.toLowerCase();
+
+    // Check for advanced responses first
+    const advancedResponse = processAdvancedMessage(message);
+    if (advancedResponse) {
+        return advancedResponse;
+    }
+
+    // Product inquiries
+    if (lowerMessage.includes('samsung') || lowerMessage.includes('scr01') || lowerMessage.includes('5g mobile')) {
+        return formatProductResponse(chatbotResponses.products.samsung);
+    }
+
+    if (lowerMessage.includes('router') || lowerMessage.includes('wifi 6') || lowerMessage.includes('mesh')) {
+        return formatProductResponse(chatbotResponses.products.router);
+    }
+
+    if (lowerMessage.includes('sim') || lowerMessage.includes('data') || lowerMessage.includes('unlimited')) {
+        return formatProductResponse(chatbotResponses.products.sim);
+    }
+
+    // Price inquiries
+    if (lowerMessage.includes('giá') || lowerMessage.includes('bao nhiêu') || lowerMessage.includes('price')) {
+        return createPriceList();
+    }
+
+    // Shipping inquiries
+    if (lowerMessage.includes('giao hàng') || lowerMessage.includes('ship') || lowerMessage.includes('vận chuyển')) {
+        return chatbotResponses.faqs.shipping;
+    }
+
+    // Warranty inquiries
+    if (lowerMessage.includes('bảo hành') || lowerMessage.includes('warranty') || lowerMessage.includes('đổi trả')) {
+        return chatbotResponses.faqs.warranty;
+    }
+
+    // Payment inquiries
+    if (lowerMessage.includes('thanh toán') || lowerMessage.includes('payment') || lowerMessage.includes('trả tiền')) {
+        return chatbotResponses.faqs.payment;
+    }
+
+    // Genuine inquiries
+    if (lowerMessage.includes('chính hãng') || lowerMessage.includes('real') || lowerMessage.includes('authentic')) {
+        return chatbotResponses.faqs.genuine;
+    }
+
+    // Default response
+    return createDefaultResponse();
+}
+
+// Format product response
+function formatProductResponse(product) {
+    const priceSection = product.originalPrice ?
+        `💰 Giá: <span style="color: #e74c3c; font-weight: bold;">${product.price}</span>
+         <span style="text-decoration: line-through; color: #999; font-size: 0.9em;">${product.originalPrice}</span>
+         <span style="background: #ffe0e0; color: #e74c3c; padding: 2px 6px; border-radius: 8px; font-size: 0.8em;">-${product.discount}</span>`
+        : `💰 Giá: <span style="color: #e74c3c; font-weight: bold;">${product.price}</span>`;
+
+    const featuresSection = product.features ?
+        `<br><strong>Tính năng đặc biệt:</strong><br>${product.features.slice(0, 4).map(feature => `${feature}`).join('<br>')}` : '';
+
+    const useCasesSection = product.useCases ?
+        `<br><br><strong>Phù hợp cho:</strong><br>${product.useCases.slice(0, 3).map(useCase => `• ${useCase}`).join('<br>')}` : '';
+
+    return `
+        <strong>${product.name}</strong><br>
+        ${priceSection}<br><br>
+        📝 ${product.info}<br>
+        ${featuresSection}
+        ${useCasesSection}
+        <br><br>
+        <div style="margin-top: 10px; display: flex; gap: 5px; flex-wrap: wrap;">
+            <button onclick="showDetailedSpecs('${product.name.replace(/'/g, "\\'")}' )" style="background: #9c27b0; color: white; border: none; padding: 6px 12px; border-radius: 12px; cursor: pointer; font-size: 12px;">📊 Thông số chi tiết</button>
+            <button onclick="contactSales()" style="background: #0084ff; color: white; border: none; padding: 6px 12px; border-radius: 12px; cursor: pointer; font-size: 12px;">💬 Chat ngay</button>
+            <button onclick="viewProduct()" style="background: #27ae60; color: white; border: none; padding: 6px 12px; border-radius: 12px; cursor: pointer; font-size: 12px;">👀 Xem trang sản phẩm</button>
+        </div>
+    `;
+}
+
+// Create price list
+function createPriceList() {
+    return `
+        <strong>💰 Bảng giá sản phẩm vOz Shop:</strong><br><br>
+        📱 <strong>Samsung Galaxy 5G SCR01:</strong> 4.990.000₫<br>
+        🔥 <em>(Giảm 29% từ 6.990.000₫)</em><br><br>
+        📶 <strong>Router WiFi 6 AX1800:</strong> 2.490.000₫<br>
+        🔥 <em>(Giảm 29% từ 3.490.000₫)</em><br><br>
+        📊 <strong>Sim 5G Unlimited:</strong> 290.000₫/tháng<br>
+        🔥 <em>(Giảm 51% từ 590.000₫)</em><br><br>
+        ✨ <strong>Miễn phí giao hàng</strong> cho đơn hàng > 500k<br><br>
+        <button onclick="contactSales()" style="background: #f53d2d; color: white; border: none; padding: 8px 15px; border-radius: 15px; cursor: pointer;">🛒 Đặt hàng ngay</button>
+    `;
+}
+
+// Create default response
+function createDefaultResponse() {
+    return `
+        Xin lỗi, tôi chưa hiểu câu hỏi của bạn. 😅<br><br>
+        Tôi có thể giúp bạn về:<br>
+        • 📱 Thông tin sản phẩm<br>
+        • 💰 Giá cả và khuyến mãi<br>
+        • 🚚 Chính sách giao hàng<br>
+        • 🛡️ Bảo hành và đổi trả<br><br>
+        <div style="margin-top: 10px;">
+            <button onclick="askAboutProduct()" style="background: #0084ff; color: white; border: none; padding: 6px 12px; border-radius: 12px; cursor: pointer; margin: 2px;">📱 Sản phẩm</button>
+            <button onclick="askAboutPrice()" style="background: #27ae60; color: white; border: none; padding: 6px 12px; border-radius: 12px; cursor: pointer; margin: 2px;">💰 Giá cả</button>
+            <button onclick="contactSales()" style="background: #f53d2d; color: white; border: none; padding: 6px 12px; border-radius: 12px; cursor: pointer; margin: 2px;">👨‍💼 Tư vấn viên</button>
+        </div>
+    `;
+}
+
+// Quick action functions
+function askAboutProduct() {
+    addChatbotMessage('Tôi muốn tìm hiểu về sản phẩm', 'user');
+    setTimeout(() => {
+        const response = `
+            <strong>🛍️ Sản phẩm nổi bật tại vOz Shop:</strong><br><br>
+
+            <div style="margin: 10px 0; padding: 8px; background: rgba(255,255,255,0.1); border-radius: 8px;">
+                📱 <strong>Samsung Galaxy 5G SCR01</strong><br>
+                Router 5G di động - 4.990.000₫<br>
+                <button onclick="sendChatbotMessage_auto('samsung')" style="background: rgba(255,255,255,0.2); color: white; border: none; padding: 4px 8px; border-radius: 8px; cursor: pointer; font-size: 11px; margin-top: 4px;">Xem chi tiết</button>
+            </div>
+
+            <div style="margin: 10px 0; padding: 8px; background: rgba(255,255,255,0.1); border-radius: 8px;">
+                📶 <strong>Router WiFi 6 AX1800</strong><br>
+                Mesh toàn nhà - 2.490.000₫<br>
+                <button onclick="sendChatbotMessage_auto('router')" style="background: rgba(255,255,255,0.2); color: white; border: none; padding: 4px 8px; border-radius: 8px; cursor: pointer; font-size: 11px; margin-top: 4px;">Xem chi tiết</button>
+            </div>
+
+            <div style="margin: 10px 0; padding: 8px; background: rgba(255,255,255,0.1); border-radius: 8px;">
+                📊 <strong>Sim 5G Unlimited</strong><br>
+                Data không giới hạn - 290.000₫/tháng<br>
+                <button onclick="sendChatbotMessage_auto('sim')" style="background: rgba(255,255,255,0.2); color: white; border: none; padding: 4px 8px; border-radius: 8px; cursor: pointer; font-size: 11px; margin-top: 4px;">Xem chi tiết</button>
+            </div>
+        `;
+        addChatbotMessage(response, 'bot');
+    }, 500);
+}
+
+function askAboutPrice() {
+    addChatbotMessage('Cho tôi biết về giá cả', 'user');
+    setTimeout(() => {
+        addChatbotMessage(createPriceList(), 'bot');
+    }, 500);
+}
+
+function askAboutShipping() {
+    addChatbotMessage('Chính sách giao hàng như thế nào?', 'user');
+    setTimeout(() => {
+        const response = `
+            <strong>🚚 Chính sách giao hàng vOz Shop:</strong><br><br>
+            📍 <strong>TP.HCM:</strong> Giao hàng trong 2 giờ<br>
+            🌍 <strong>Toàn quốc:</strong> 1-2 ngày làm việc<br>
+            💰 <strong>Miễn phí ship:</strong> Đơn hàng > 500.000₫<br>
+            📦 <strong>COD:</strong> Thanh toán khi nhận hàng<br>
+            ✅ <strong>Kiểm tra:</strong> Được mở hàng kiểm tra<br><br>
+            <button onclick="contactSales()" style="background: #27ae60; color: white; border: none; padding: 8px 15px; border-radius: 15px; cursor: pointer;">📞 Đặt hàng ngay</button>
+        `;
+        addChatbotMessage(response, 'bot');
+    }, 500);
+}
+
+function contactSales() {
+    addChatbotMessage('Tôi muốn kết nối với tư vấn viên', 'user');
+    setTimeout(() => {
+        const response = `
+            <strong>👨‍💼 Kết nối ngay với tư vấn viên:</strong><br><br>
+            📞 <strong>Hotline:</strong> 0358602326<br>
+            ⏰ <strong>Hoạt động:</strong> 8:00 - 22:00 hàng ngày<br><br>
+            <strong>Chọn cách liên hệ:</strong><br><br>
+            <a href="tel:0358602326" style="display: inline-block; background: #27ae60; color: white; text-decoration: none; padding: 10px 15px; border-radius: 20px; margin: 5px;">📞 Gọi ngay</a><br>
+            <a href="https://zalo.me/0358602326" target="_blank" style="display: inline-block; background: #0084ff; color: white; text-decoration: none; padding: 10px 15px; border-radius: 20px; margin: 5px;">💬 Chat Zalo</a><br>
+            <a href="https://shopee.vn/doanhan3004" target="_blank" style="display: inline-block; background: #f53d2d; color: white; text-decoration: none; padding: 10px 15px; border-radius: 20px; margin: 5px;">🛒 Mua Shopee</a>
+        `;
+        addChatbotMessage(response, 'bot');
+    }, 500);
+}
+
+function viewProduct() {
+    document.querySelector('#products').scrollIntoView({ behavior: 'smooth' });
+    if (chatbotOpen) {
+        toggleChatbot();
+    }
+}
+
+// Auto send message (for quick buttons)
+function sendChatbotMessage_auto(message) {
+    document.getElementById('chatbot-input').value = message;
+    sendChatbotMessage();
+}
+
+// Show detailed specifications
+function showDetailedSpecs(productName) {
+    let product;
+    if (productName.includes('Samsung Galaxy 5G')) {
+        product = chatbotResponses.products.samsung;
+    } else if (productName.includes('Router WiFi 6')) {
+        product = chatbotResponses.products.router;
+    } else if (productName.includes('Sim 5G')) {
+        product = chatbotResponses.products.sim;
+    }
+
+    if (!product || !product.specs) {
+        addChatbotMessage('Không tìm thấy thông số kỹ thuật chi tiết.', 'bot');
+        return;
+    }
+
+    addChatbotMessage('Cho tôi xem thông số kỹ thuật chi tiết', 'user');
+    setTimeout(() => {
+        const response = `
+            <strong>📊 Thông số kỹ thuật chi tiết - ${product.name}</strong><br><br>
+            ${product.specs.map(spec => `• ${spec}`).join('<br>')}
+            <br><br>
+            <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; margin-top: 10px;">
+                <strong>💡 Tại sao chọn sản phẩm này?</strong><br>
+                ${product.features ? product.features.slice(0, 3).map(feature => `${feature}`).join('<br>') : 'Sản phẩm chất lượng cao, giá cả hợp lý.'}
+            </div>
+            <br>
+            <button onclick="contactSales()" style="background: #f53d2d; color: white; border: none; padding: 8px 15px; border-radius: 15px; cursor: pointer;">🛒 Đặt hàng ngay</button>
+        `;
+        addChatbotMessage(response, 'bot');
+    }, 500);
+}
+
+// Enhanced chatbot with more intelligent responses
+function processAdvancedMessage(message) {
+    const lowerMessage = message.toLowerCase();
+
+    // Specific Samsung questions
+    if (lowerMessage.includes('pin') && (lowerMessage.includes('samsung') || lowerMessage.includes('scr01'))) {
+        return `
+            <strong>🔋 Thông tin pin Samsung Galaxy 5G SCR01:</strong><br><br>
+            • <strong>Dung lượng:</strong> 5000mAh (pin khủng)<br>
+            • <strong>Thời gian sử dụng:</strong> 16-20 giờ liên tục<br>
+            • <strong>Thời gian chờ:</strong> Lên đến 790 giờ<br>
+            • <strong>Sạc nhanh:</strong> Có hỗ trợ sạc nhanh<br>
+            • <strong>Sử dụng:</strong> Có thể vừa sạc vừa sử dụng<br><br>
+            💡 <em>Pin 5000mAh đủ dùng cả ngày mà không cần sạc thêm!</em><br><br>
+            <button onclick="contactSales()" style="background: #27ae60; color: white; border: none; padding: 8px 15px; border-radius: 15px; cursor: pointer;">💬 Tư vấn thêm</button>
+        `;
+    }
+
+    if (lowerMessage.includes('tốc độ') && (lowerMessage.includes('samsung') || lowerMessage.includes('5g'))) {
+        return `
+            <strong>🚀 Tốc độ Samsung Galaxy 5G SCR01:</strong><br><br>
+            • <strong>Download 5G:</strong> Lên đến 2.2Gbps<br>
+            • <strong>Upload 5G:</strong> Lên đến 183Mbps<br>
+            • <strong>WiFi chuẩn:</strong> 802.11a/b/g/n/ac<br>
+            • <strong>Thực tế tại VN:</strong> 100-800Mbps (tùy vùng)<br><br>
+            📱 <strong>So sánh tốc độ:</strong><br>
+            • 4G thường: 20-50Mbps<br>
+            • 5G SCR01: 100-800Mbps<br>
+            • Nhanh gấp 10-20 lần 4G!<br><br>
+            <button onclick="contactSales()" style="background: #f53d2d; color: white; border: none; padding: 8px 15px; border-radius: 15px; cursor: pointer;">🛒 Đặt mua ngay</button>
+        `;
+    }
+
+    // Network carrier questions
+    if (lowerMessage.includes('nhà mạng') || lowerMessage.includes('viettel') || lowerMessage.includes('vinaphone') || lowerMessage.includes('mobifone')) {
+        return `
+            <strong>📡 Hỗ trợ nhà mạng tại Việt Nam:</strong><br><br>
+            ✅ <strong>Viettel:</strong> Hỗ trợ đầy đủ 4G/5G<br>
+            ✅ <strong>VinaPhone:</strong> Hỗ trợ đầy đủ 4G/5G<br>
+            ✅ <strong>MobiFone:</strong> Hỗ trợ đầy đủ 4G/5G<br>
+            ✅ <strong>Vietnamobile:</strong> Hỗ trợ 4G<br><br>
+            📶 <strong>Tần số hỗ trợ:</strong><br>
+            • 5G: n28, n41, n77, n78, n79<br>
+            • 4G: B1, B3, B20, B41<br><br>
+            💡 <em>Cắm sim bất kỳ nhà mạng nào là dùng được ngay!</em><br><br>
+            <button onclick="contactSales()" style="background: #0084ff; color: white; border: none; padding: 8px 15px; border-radius: 15px; cursor: pointer;">💬 Tư vấn sim phù hợp</button>
+        `;
+    }
+
+    return null; // Return null if no advanced match found
+}
+
+// Initialize chatbot
+document.addEventListener('DOMContentLoaded', function() {
+    // Add welcome message after 3 seconds
+    setTimeout(() => {
+        if (!chatbotOpen) {
+            const chatbotButton = document.getElementById('chatbot-button');
+            chatbotButton.style.animation = 'chatbotPulse 1s ease-in-out 3';
+        }
+    }, 3000);
+
+    console.log('🤖 vOz Chatbot initialized successfully!');
+});

@@ -189,6 +189,49 @@
         </div>
     </div>
 
+    <!-- Chatbot -->
+    <div id="chatbot-container">
+        <div id="chatbot-button" onclick="toggleChatbot()">
+            <span id="chatbot-icon">💬</span>
+            <span id="chatbot-text">Tư vấn miễn phí</span>
+        </div>
+
+        <div id="chatbot-window" class="chatbot-hidden">
+            <div id="chatbot-header">
+                <div class="chatbot-info">
+                    <img src="https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=40&h=40&fit=crop&crop=face" alt="Avatar" class="chatbot-avatar">
+                    <div>
+                        <h4>vOz Bot 🤖</h4>
+                        <span class="chatbot-status">Đang online</span>
+                    </div>
+                </div>
+                <button id="chatbot-close" onclick="toggleChatbot()">&times;</button>
+            </div>
+
+            <div id="chatbot-messages">
+                <div class="chatbot-message bot-message">
+                    <div class="message-content">
+                        <p>Xin chào! Tôi là vOz Bot 🤖</p>
+                        <p>Tôi có thể giúp bạn:</p>
+                        <div class="quick-options">
+                            <button onclick="askAboutProduct()">📱 Tư vấn sản phẩm</button>
+                            <button onclick="askAboutPrice()">💰 Hỏi về giá</button>
+                            <button onclick="askAboutShipping()">🚚 Chính sách giao hàng</button>
+                            <button onclick="contactSales()">👨‍💼 Kết nối tư vấn viên</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="chatbot-input-area">
+                <input type="text" id="chatbot-input" placeholder="Nhập câu hỏi của bạn..." onkeypress="handleChatbotEnter(event)">
+                <button id="chatbot-send" onclick="sendChatbotMessage()">
+                    <span>📤</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <footer>
         <div class="container">
             <p>&copy; 2024 vOz Shop. Tất cả quyền được bảo lưu.</p>
