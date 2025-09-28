@@ -817,8 +817,8 @@ Cảm ơn bạn đã hiểu! 😊`;
             setTimeout(() => reject(new Error('AI timeout')), 8000); // 8 second timeout
         });
 
-        // Option 1: Use Hugging Face Inference API (free)
-        const aiPromise = callHuggingFaceAPI(systemPrompt, message);
+        // Option 1: Use Free AI API
+        const aiPromise = callFreeAI(systemPrompt, message);
         return await Promise.race([aiPromise, timeoutPromise]);
     } catch (error) {
         console.log('AI service failed, using smart fallback:', error);
@@ -903,35 +903,59 @@ Bạn có muốn tôi tư vấn thêm về sản phẩm này không? 😊`;
     return processChatbotMessage(message);
 }
 
-// Hugging Face API call (free tier)
-async function callHuggingFaceAPI(systemPrompt, userMessage) {
-    const response = await fetch('https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
+// Free AI API call using OpenAI-compatible service
+async function callFreeAI(systemPrompt, userMessage) {
+    // Try multiple free AI services
+    const freeAIServices = [
+        // Service 1: Use a free OpenAI-compatible API
+        {
+            url: 'https://api.deepinfra.com/v1/openai/chat/completions',
+            model: 'meta-llama/Llama-2-7b-chat-hf'
         },
-        body: JSON.stringify({
-            inputs: `${systemPrompt}\n\nKhách hàng: ${userMessage}\nvOz Bot:`,
-            parameters: {
-                max_length: 500,
-                temperature: 0.7,
-                do_sample: true
+        // Service 2: Another free service
+        {
+            url: 'https://api.together.xyz/v1/chat/completions',
+            model: 'togethercomputer/llama-2-7b-chat'
+        }
+    ];
+
+    for (const service of freeAIServices) {
+        try {
+            const response = await fetch(service.url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    model: service.model,
+                    messages: [
+                        {
+                            role: 'system',
+                            content: systemPrompt
+                        },
+                        {
+                            role: 'user',
+                            content: userMessage
+                        }
+                    ],
+                    max_tokens: 300,
+                    temperature: 0.7
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                if (data.choices && data.choices[0] && data.choices[0].message) {
+                    return data.choices[0].message.content.trim();
+                }
             }
-        })
-    });
-
-    if (!response.ok) {
-        throw new Error('Hugging Face API failed');
+        } catch (error) {
+            console.log(`AI service ${service.url} failed:`, error);
+            continue;
+        }
     }
 
-    const data = await response.json();
-    if (data.generated_text) {
-        // Extract just the bot response
-        const botResponse = data.generated_text.split('vOz Bot:').pop().trim();
-        return botResponse || generateSmartResponse(userMessage);
-    } else {
-        throw new Error('No response from AI');
-    }
+    throw new Error('All AI services failed');
 }
 
 // Process chatbot message
