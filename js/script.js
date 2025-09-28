@@ -576,6 +576,56 @@ const chatbotResponses = {
         warranty: 'Tất cả sản phẩm có bảo hành chính hãng 12-24 tháng. Hỗ trợ đổi trả trong 7 ngày.',
         payment: 'Chúng tôi nhận thanh toán tiền mặt, chuyển khoản, và các ví điện tử phổ biến.',
         genuine: 'Cam kết 100% hàng chính hãng, còn nguyên seal. Hoàn tiền 200% nếu phát hiện hàng fake.'
+    },
+    apnSettings: {
+        viettel: {
+            name: 'Viettel',
+            apn: 'v-internet',
+            username: '',
+            password: '',
+            authType: 'None',
+            networkType: '4G/5G',
+            additionalSettings: {
+                mccMnc: '452-04',
+                protocol: 'IPv4/IPv6'
+            }
+        },
+        vinaphone: {
+            name: 'VinaPhone',
+            apn: 'm3-world',
+            username: 'mms',
+            password: 'mms',
+            authType: 'PAP',
+            networkType: '4G/5G',
+            additionalSettings: {
+                mccMnc: '452-02',
+                protocol: 'IPv4'
+            }
+        },
+        mobifone: {
+            name: 'MobiFone',
+            apn: 'm-wap',
+            username: 'mms',
+            password: 'mms',
+            authType: 'PAP',
+            networkType: '4G/5G',
+            additionalSettings: {
+                mccMnc: '452-01',
+                protocol: 'IPv4'
+            }
+        },
+        vietnamobile: {
+            name: 'Vietnamobile',
+            apn: 'internet',
+            username: '',
+            password: '',
+            authType: 'None',
+            networkType: '4G',
+            additionalSettings: {
+                mccMnc: '452-05',
+                protocol: 'IPv4'
+            }
+        }
     }
 };
 
@@ -915,11 +965,109 @@ function processAdvancedMessage(message) {
             • 5G: n28, n41, n77, n78, n79<br>
             • 4G: B1, B3, B20, B41<br><br>
             💡 <em>Cắm sim bất kỳ nhà mạng nào là dùng được ngay!</em><br><br>
+            <button onclick="showAPNSettings()" style="background: #9c27b0; color: white; border: none; padding: 8px 15px; border-radius: 15px; cursor: pointer; margin-right: 5px;">⚙️ Cài đặt APN</button>
             <button onclick="contactSales()" style="background: #0084ff; color: white; border: none; padding: 8px 15px; border-radius: 15px; cursor: pointer;">💬 Tư vấn sim phù hợp</button>
         `;
     }
 
+    // APN setup questions
+    if (lowerMessage.includes('apn') || lowerMessage.includes('cài đặt') || lowerMessage.includes('thiết lập') || lowerMessage.includes('setup')) {
+        return showAPNSettingsResponse();
+    }
+
+    // Specific APN for carriers
+    if (lowerMessage.includes('apn viettel')) {
+        return formatAPNResponse(chatbotResponses.apnSettings.viettel);
+    }
+    if (lowerMessage.includes('apn vinaphone')) {
+        return formatAPNResponse(chatbotResponses.apnSettings.vinaphone);
+    }
+    if (lowerMessage.includes('apn mobifone')) {
+        return formatAPNResponse(chatbotResponses.apnSettings.mobifone);
+    }
+    if (lowerMessage.includes('apn vietnamobile')) {
+        return formatAPNResponse(chatbotResponses.apnSettings.vietnamobile);
+    }
+
     return null; // Return null if no advanced match found
+}
+
+// Show APN Settings
+function showAPNSettings() {
+    addChatbotMessage('Hướng dẫn cài đặt APN cho Samsung Galaxy 5G SCR01', 'user');
+    setTimeout(() => {
+        addChatbotMessage(showAPNSettingsResponse(), 'bot');
+    }, 500);
+}
+
+function showAPNSettingsResponse() {
+    return `
+        <strong>⚙️ Cài đặt APN cho Samsung Galaxy 5G SCR01</strong><br><br>
+        <strong>Chọn nhà mạng của bạn:</strong><br><br>
+
+        <div style="display: grid; gap: 8px;">
+            <button onclick="showCarrierAPN('viettel')" style="background: #d32f2f; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; text-align: left;">
+                📶 <strong>Viettel</strong> - APN: v-internet
+            </button>
+
+            <button onclick="showCarrierAPN('vinaphone')" style="background: #7b1fa2; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; text-align: left;">
+                📶 <strong>VinaPhone</strong> - APN: m3-world
+            </button>
+
+            <button onclick="showCarrierAPN('mobifone')" style="background: #1976d2; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; text-align: left;">
+                📶 <strong>MobiFone</strong> - APN: m-wap
+            </button>
+
+            <button onclick="showCarrierAPN('vietnamobile')" style="background: #388e3c; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; text-align: left;">
+                📶 <strong>Vietnamobile</strong> - APN: internet
+            </button>
+        </div>
+
+        <br><br>
+        💡 <em>Hầu hết các sim sẽ tự động cấu hình APN. Nếu không kết nối được, hãy chọn nhà mạng để xem hướng dẫn chi tiết.</em>
+    `;
+}
+
+function showCarrierAPN(carrier) {
+    const apnData = chatbotResponses.apnSettings[carrier];
+    if (!apnData) return;
+
+    addChatbotMessage(`Cài đặt APN cho ${apnData.name}`, 'user');
+    setTimeout(() => {
+        addChatbotMessage(formatAPNResponse(apnData), 'bot');
+    }, 500);
+}
+
+function formatAPNResponse(apnData) {
+    return `
+        <strong>⚙️ Cài đặt APN ${apnData.name}</strong><br><br>
+
+        <div style="background: rgba(255,255,255,0.1); padding: 12px; border-radius: 8px; margin: 10px 0;">
+            <strong>📋 Thông số cần nhập:</strong><br><br>
+            • <strong>Tên mạng:</strong> ${apnData.name}<br>
+            • <strong>APN:</strong> <code style="background: #333; color: #fff; padding: 2px 6px; border-radius: 4px;">${apnData.apn}</code><br>
+            • <strong>Username:</strong> ${apnData.username || '(để trống)'}<br>
+            • <strong>Password:</strong> ${apnData.password || '(để trống)'}<br>
+            • <strong>Auth Type:</strong> ${apnData.authType}<br>
+            • <strong>Network Type:</strong> ${apnData.networkType}<br>
+            • <strong>Protocol:</strong> ${apnData.additionalSettings.protocol}<br>
+        </div>
+
+        <strong>📱 Cách cài đặt trên Samsung Galaxy 5G SCR01:</strong><br><br>
+        1. Vào <strong>Settings</strong> (Cài đặt)<br>
+        2. Chọn <strong>Connections</strong> (Kết nối)<br>
+        3. Chọn <strong>Mobile networks</strong> (Mạng di động)<br>
+        4. Chọn <strong>Access Point Names</strong> (APN)<br>
+        5. Nhấn dấu <strong>+</strong> để thêm APN mới<br>
+        6. Nhập thông số bên trên<br>
+        7. Nhấn <strong>Save</strong> và chọn APN vừa tạo<br><br>
+
+        <div style="background: #e8f5e8; padding: 8px; border-radius: 6px; color: #2e7d32;">
+            ✅ <strong>Lưu ý:</strong> Thường thiết bị sẽ tự động nhận diện và cài đặt APN. Chỉ cần làm thủ công nếu không kết nối được internet.
+        </div><br>
+
+        <button onclick="contactSales()" style="background: #0084ff; color: white; border: none; padding: 8px 15px; border-radius: 15px; cursor: pointer;">💬 Cần hỗ trợ thêm?</button>
+    `;
 }
 
 // Initialize chatbot
@@ -932,5 +1080,5 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }, 3000);
 
-    console.log('🤖 vOz Chatbot initialized successfully!');
+    console.log('🤖 vOz Chatbot with APN setup initialized successfully!');
 });
