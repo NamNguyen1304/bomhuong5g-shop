@@ -519,9 +519,9 @@ const chatbotResponses = {
     products: {
         'samsung': {
             name: 'Samsung Galaxy 5G Mobile WiFi SCR01',
-            price: '4.990.000₫',
-            originalPrice: '6.990.000₫',
-            discount: '29%',
+            price: '2.700.000₫',
+            originalPrice: '4.500.000₫',
+            discount: '40%',
             info: 'Router 5G di động chính hãng của Samsung. Sử dụng chipset MediaTek Dimensity 720 mạnh mẽ, hệ điều hành Android 11 với OneUI 3.0. Thiết bị hoàn hảo cho doanh nhân, freelancer và những người thường xuyên di chuyển.',
             specs: [
                 'Chipset: MediaTek Dimensity 720 (7nm)',
@@ -560,13 +560,13 @@ const chatbotResponses = {
         },
         'router': {
             name: 'Router WiFi 6 AX1800 Mesh',
-            price: '2.490.000₫',
+            price: '1.890.000₫',
             info: 'Router WiFi 6 công nghệ Mesh, phủ sóng toàn nhà 300m², hỗ trợ 80+ thiết bị.',
             specs: ['WiFi 6 AX1800: 1.8Gbps', 'Phủ sóng: 300m²', '4 anten 5dBi', 'Hỗ trợ: 80+ thiết bị']
         },
         'sim': {
             name: 'Sim 5G Data Unlimited',
-            price: '290.000₫/tháng',
+            price: '199.000₫/tháng',
             info: 'Gói sim 5G không giới hạn dung lượng, tốc độ thực tế 100-500Mbps.',
             specs: ['Data: Unlimited thực sự', 'Tốc độ: 100-500Mbps', 'Phủ sóng: 63 tỉnh thành', 'Không FUP']
         }
@@ -778,12 +778,12 @@ function formatProductResponse(product) {
 function createPriceList() {
     return `
         <strong>💰 Bảng giá sản phẩm vOz Shop:</strong><br><br>
-        📱 <strong>Samsung Galaxy 5G SCR01:</strong> 4.990.000₫<br>
-        🔥 <em>(Giảm 29% từ 6.990.000₫)</em><br><br>
-        📶 <strong>Router WiFi 6 AX1800:</strong> 2.490.000₫<br>
-        🔥 <em>(Giảm 29% từ 3.490.000₫)</em><br><br>
-        📊 <strong>Sim 5G Unlimited:</strong> 290.000₫/tháng<br>
-        🔥 <em>(Giảm 51% từ 590.000₫)</em><br><br>
+        📱 <strong>Samsung Galaxy 5G SCR01:</strong> 2.700.000₫<br>
+        🔥 <em>(Giảm 40% từ 4.500.000₫)</em><br><br>
+        📶 <strong>Router WiFi 6 AX1800:</strong> 1.890.000₫<br>
+        🔥 <em>(Giảm 37% từ 2.990.000₫)</em><br><br>
+        📊 <strong>Sim 5G Unlimited:</strong> 199.000₫/tháng<br>
+        🔥 <em>(Giảm 50% từ 399.000₫)</em><br><br>
         ✨ <strong>Miễn phí giao hàng</strong> cho đơn hàng > 500k<br><br>
         <button onclick="contactSales()" style="background: #f53d2d; color: white; border: none; padding: 8px 15px; border-radius: 15px; cursor: pointer;">🛒 Đặt hàng ngay</button>
     `;
